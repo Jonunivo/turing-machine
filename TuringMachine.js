@@ -48,6 +48,7 @@ class TuringMachine{
                 
             }
         if(currentState === this.acceptstate){
+            console.log(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
             console.log("--- accept state reached! ---");
         }
         else if(currentState === this.rejectstate){
@@ -92,6 +93,26 @@ function getStateById(states, id){
     return null;
 }
 
+// ---- User Interaction
+//Create a new state via a button
+
+
+
+// --- helper functions
+function createNewState(id, name, isStarting, isAccepting, isRejecting){
+    //check for invalid input
+    //TO DO
+    //add state to states list
+    this.states.add(new State(id, isStarting, isAccepting, isRejecting));
+
+}
+
+
+
+
+
+
+
 // --- create a very simple turingmachine:
 //      6 states, each going to next state if 1, else stay at state
 //      -> reaches acceptstate if string contains >= 5 "1"
@@ -99,16 +120,16 @@ function getStateById(states, id){
 let states = new Set();
 let transitions = new Map();
 //start state
-let startstate = new State(0, true, 5);
+let startstate = new State(0, true, false, false);
 states.add(startstate);
 
 for(let i = 1; i<5; i++){
-    states.add(new State(i, false, 5));
+    states.add(new State(i, false, false, false));
 }
 //accepting&rejecting state (reject state should not be reached here)
-let acceptstate = new State(5, false, 0);
+let acceptstate = new State(5, false, true, false);
 states.add(acceptstate);
-let rejectstate = new State(10, false, 1);
+let rejectstate = new State(10, false, false, true);
 
 // -- transitions
 //from start to start (if 0) & to first (if 1)
