@@ -86,16 +86,17 @@ export class TuringMachine{
     }
 
     //creates a new state & adds it to turingmachine (caller)
+    //called by userInput.createState()
     createNewState (id, name, isStarting, isAccepting, isRejecting){
         //check for invalid input
-        //TO DO
+        // -- TO DO --
         //add state to states list
         let state = new State(id, isStarting, isAccepting, isRejecting)
         this.states.add(state);
         return state;
     
     }
-//helper function that returns state when id of state given
+//helper function that returns corrseponding state when id of state given
     getStateById(id){
         console.log("ddd");
         let states = this.states;
