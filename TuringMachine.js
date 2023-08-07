@@ -1,8 +1,20 @@
 
 import {State} from './State.js';
 
+
+
+//test click of button
+function modifyText(){
+    const t1 = document.getElementById("head-title");
+    t1.innerHTML = "this workedaaaaa!!!!!!!";
+}
+document.getElementById("addStateButton").addEventListener("click", modifyText);
+
+
+
+
 // ---- Turingmaschine Prototyp 1
-class TuringMachine{
+export class TuringMachine{
     //TM consists of:
     //states: set of states (State.js)
     //sigma: Eingabealphabet (set of chars)
@@ -37,11 +49,12 @@ class TuringMachine{
                 //consume character & execute transition function
                 let currentToken = input.substring(0,1);
                 input = input.substring(1);
-                //debug
+                ////debug/logging
                 console.log(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
                 console.log(`   next state if 0: ${this.transition(currentState, this.delta, "0").id}`);
                 console.log(`   next state if 1: ${this.transition(currentState, this.delta, "1").id}`);
                 console.log(`   current Token:   ${currentToken}`);
+                ////
                 //transition
                 currentState = this.transition(currentState, this.delta, currentToken);
                 i++;
@@ -79,6 +92,17 @@ class TuringMachine{
         }
         return null;
     }
+    createNewState (id, name, isStarting, isAccepting, isRejecting){
+        //check for invalid input
+        //TO DO
+        //add state to states list
+        let state = new State(id, isStarting, isAccepting, isRejecting)
+        this.states.add(state);
+        return state;
+    
+    }
+
+
 
 }
 
@@ -94,18 +118,11 @@ function getStateById(states, id){
 }
 
 // ---- User Interaction
-//Create a new state via a button
 
 
 
-// --- helper functions
-function createNewState(id, name, isStarting, isAccepting, isRejecting){
-    //check for invalid input
-    //TO DO
-    //add state to states list
-    this.states.add(new State(id, isStarting, isAccepting, isRejecting));
 
-}
+
 
 
 
@@ -141,8 +158,8 @@ for(let i = 1; i<5; i++){
     transitions.set([getStateById(states, i), "1"], getStateById(states, i+1))
 }
 //to last state (if 1) else stay
-transitions.set([getStateById(states, 4), "0"], getStateById(states, 4));
-transitions.set([getStateById(states, 4), "1"], getStateById(states, 5));
+transitions.set([getStateById(states, 1), "0"], getStateById(states, 1));
+transitions.set([getStateById(states, 1), "0"], getStateById(states, 1));
 
 
 
@@ -157,4 +174,4 @@ let gamma = new Set(sigma);
 // -- TM creation
 let testturingmachine = new TuringMachine(states, sigma, gamma, transitions, startstate, acceptstate, rejectstate);
 
-testturingmachine.runSimulation("1111111111");
+//testturingmachine.runSimulation("1111111111");
