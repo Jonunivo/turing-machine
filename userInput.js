@@ -1,12 +1,6 @@
 import {State} from './State.js';
 import {TuringMachine} from './TuringMachine.js'
 
-//test click of button
-function modifyText(){
-    const t1 = document.getElementById("head-title");
-    t1.innerHTML = "this workedbbbbbbbb!!!!!!!";
-}
-document.getElementById("addStateButton").addEventListener("click", modifyText);
 
 //global variables
 //TuringMachine

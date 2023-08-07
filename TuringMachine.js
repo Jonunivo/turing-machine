@@ -2,17 +2,6 @@
 import {State} from './State.js';
 
 
-
-//test click of button
-function modifyText(){
-    const t1 = document.getElementById("head-title");
-    t1.innerHTML = "this workedaaaaa!!!!!!!";
-}
-document.getElementById("addStateButton").addEventListener("click", modifyText);
-
-
-
-
 // ---- Turingmaschine Prototyp 1
 export class TuringMachine{
     //TM consists of:
@@ -92,6 +81,8 @@ export class TuringMachine{
         }
         return null;
     }
+
+    //creates a new state & adds it to turingmachine (caller)
     createNewState (id, name, isStarting, isAccepting, isRejecting){
         //check for invalid input
         //TO DO
@@ -129,7 +120,7 @@ function getStateById(states, id){
 
 
 
-
+/*
 // --- create a very simple turingmachine:
 //      6 states, each going to next state if 1, else stay at state
 //      -> reaches acceptstate if string contains >= 5 "1"
@@ -174,4 +165,7 @@ let gamma = new Set(sigma);
 // -- TM creation
 let testturingmachine = new TuringMachine(states, sigma, gamma, transitions, startstate, acceptstate, rejectstate);
 
-//testturingmachine.runSimulation("1111111111");
+testturingmachine.runSimulation("1111111111");
+
+
+*/
