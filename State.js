@@ -3,24 +3,22 @@ export class State{
     //id: unique int 
     //starting: true if State is starting state, false otherwise
     //accepting: 0=accepting state; 1=rejecting state; >1=neither
-    constructor(id, starting, accepting){
+    constructor(id, isStarting, isAccepting, isRejecting){
         this.id =id;
-        this.starting = starting;
-        this.accepting = accepting;
+        this.isStarting = isStarting;
+        this.isAccepting = isAccepting;
+        this.isRejecting = isRejecting
     }
     //getter methods
     get isAccepting() {
-        return (this.accepting === 0);
+        return (this.isAccepting);
     }
     get isRejecting() {
-        return (this.accepting === 1);
+        return (this.isRejecting)
     }
     get isStarting() {
-        return (this.starting);
+        return (this.isStarting);
     }
     
 }
 
-
-const teststate = new State(0, true, 0);
-console.log(teststate.starting);

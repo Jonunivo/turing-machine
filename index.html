@@ -18,10 +18,60 @@
     <body>
         <h1 id="head-title">This is my Turing Machine</h1>
 
+        <!--- Buttons -->
+        <button id="addStateButton" class="button">Add New State</button>
+
+
+        <!-- Create State user input -->
+ 
+        <!-- Add form elements for user input -->
+        <form id="stateForm">
+            <label for="stateName">State Name:</label>
+            <input type="text" id="stateName" required>
+            <br>
+            <label for="stateId">State ID:</label>
+            <input type="number" id="stateId" min="0" max="1000">
+            <br>
+
+            <p>Starting state?</p>
+            <label for="stateStartingYes">Yes</label>
+            <input type="radio" id="stateStartingYes" name="startingState" value="true">
+            <br>
+            <label for="stateStartingNo">No</label>
+            <input type="radio" id="stateStartingNo" name="startingState" value="false">
+
+
+
+            <p>Accepting state?</p>
+            <label for="stateAcceptingYes">Yes</label>
+            <input type="radio" id="stateAcceptingYes" name="acceptingState" value="true">
+            <br>
+            <label for="stateAcceptingNo">No</label>
+            <input type="radio" id="stateAcceptingNo" name="acceptingState" value="false">
+
+
+
+            <p>Rejecting state?</p>
+            <label for="stateRejectingYes">Yes</label>
+            <input type="radio" id="stateRejectingYes" name="rejectingState" value="true">
+            <br>
+            <label for="stateRejectingNo">No</label>
+            <input type="radio" id="stateRejectingNo" name="rejectingState" value="false">
+
+            <br>
+
+            <button id="createStateButton" type="button">Create State</button>
+        </form>
+
+        <div id="logMessages"></div>
+
         <!--- links to the scripts -->
         <script src="./Playground.js"></script>
+        <script src="./userInput.js" ></script>
         <script type="module" src="./State.js" ></script>
         <script type="module" src="./TuringMachine.js" ></script>
+
+
     </body>
 
 </html>
