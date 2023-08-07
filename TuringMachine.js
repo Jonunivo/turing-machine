@@ -52,13 +52,16 @@ export class TuringMachine{
         if(currentState === this.acceptstate){
             console.log(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
             console.log("--- accept state reached! ---");
+            return true;
         }
         else if(currentState === this.rejectstate){
             console.log("--- reject state reached! ---")
+            return false;
         }
         else{
             console.log("end of string reached, missed accept/reject state")
             console.log("-> rejecting input")
+            return false;
         }
 
 
@@ -92,12 +95,24 @@ export class TuringMachine{
         return state;
     
     }
+//helper function that returns state when id of state given
+    getStateById(id){
+        console.log("ddd");
+        let states = this.states;
+        for(const state of states){
+            if(state.id === id){
+                return state;
+            }
+        }
+        return null;
+    }
 
 
 
 }
 
 // --- Helper Functions ---
+/*
 //finds state with id = id, returns null if no state with this id exists
 function getStateById(states, id){
     for(const state of states){
@@ -107,7 +122,7 @@ function getStateById(states, id){
     }
     return null;
 }
-
+*/
 // ---- User Interaction
 
 

@@ -22,7 +22,7 @@ function createState() {
     ${isRejectingState} `;
     ////
     // create State from user input (in TuringMachine.js)
-    let currentState = turingMachine.createNewState(stateName, stateId, isStartingState, isAcceptingState, isRejectingState);
+    let currentState = turingMachine.createNewState(stateId, stateName, isStartingState, isAcceptingState, isRejectingState);
     // add accepting/rejecting/starting state to turingMachine object
     if(isStartingState){
         turingMachine.startstate=currentState;
@@ -50,19 +50,47 @@ function createState() {
     if(isAcceptingState){
         displayLogMessage(`Accepting State`)
     }
-};
+    displayLogMessage("----------")
+}
 document.getElementById("createStateButton").addEventListener("click", createState);
 
 //create transitions
 function createTransition(){
     //TO DO
+    var fromStateId0 = document.getElementById("fromStateId0").value;
+    var toStateId0 = document.getElementById("toStateId0").value;
+    var fromStateId1 = document.getElementById("fromStateId1").value;
+    var toStateId1 = document.getElementById("toStateId1").value;
+    //get corresponding states
+    var fromState0 = turingMachine.getStateById(fromStateId0);
+    var toState0 = turingMachine.getStateById(toStateId0);
+    var fromState1 = turingMachine.getStateById(fromStateId1);
+    var toState1 = turingMachine.getStateById(toStateId1);
+    //add transitions to turingMachine set delta
+    turingMachine.delta.set([fromState0, "0"], toState0);
+    turingMachine.delta.set([fromState1, "1"], toState1);
+    console.log(`0: Transition from ${fromState0} to ${toState0}`);
+    console.log(`1: Transition from ${fromState1} to ${toState1}`);
+    //display to user log
+    displayLogMessage(`Transition created`)
+    displayLogMessage(`0: from ${fromStateId0} to ${toStateId0}`)
+    displayLogMessage(`1: from ${fromStateId1} to ${toStateId1}`)
+    displayLogMessage(`--------`)
+
 }
+document.getElementById("createTransitionButton").addEventListener("click", createTransition);
 
 
 //runSimulation on inputString (not yet working, since no transitions implemented)
 function runSimulation(){
-    var inputString = document.getElementById("inputString").value;
-    turingMachine.runSimulation(inputString);
+    var inputString = document.getElementById("inputStringField").value;
+    var simulationResult = turingMachine.runSimulation(inputString);
+    if(simulationResult){
+        alert("input accepted!")
+    }
+    else{
+        alert("input rejected!")
+    }
 }
 document.getElementById("runSimulationButton").addEventListener("click", runSimulation);
 
@@ -76,8 +104,17 @@ function createTuringMachine(){
     let transitions = new Map();
     turingMachine = new TuringMachine(states, sigma, gamma, transitions, undefined, undefined, undefined);
     console.log("successfully created TM:", turingMachine);
+    //display to user log
+    displayLogMessage("TM Created!")
+    displayLogMessage("-------------------------")
 }
 document.getElementById("createTMButton").addEventListener("click", createTuringMachine);
+
+//reset button that destroys TuringMachine
+function reset(){
+    location.reload();
+}
+document.getElementById("resetButton").addEventListener("click", reset);
 
 
 //helper function that add messages to the user screen (creates p element)
@@ -86,6 +123,10 @@ function displayLogMessage(message){
     const logMessagesDiv = document.getElementById("logMessages");
     //create log window element
     const logMessagesElement = document.createElement("p");
+    logMessagesElement.setAttribute("id", "logMessage")
     logMessagesElement.textContent = message;
     logMessagesDiv.appendChild(logMessagesElement);
 }
+
+//debug helper
+
