@@ -17,13 +17,14 @@ function changeColor(event){
 document.getElementById('head-title').onclick = changeColor;
 
 //test click of button
+/*
 function modifyText(){
     const t1 = document.getElementById("head-title");
     var stateName = prompt("State name: ");
     t1.innerHTML = "this worked!"
 }
 document.getElementById("addStateButton").addEventListener("click", modifyText);
-
+*/
 
 
 

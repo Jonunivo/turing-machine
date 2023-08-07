@@ -19,9 +19,19 @@
         <h1 id="head-title">This is my Turing Machine</h1>
 
         <!--- Buttons -->
-        <button id="addStateButton" class="button">Add New State</button>
+        <button id="addStateButton" class="button">Test Button</button>
+        <br>
+        <button id="createTMButton" class="button">Create TM</button>
+        <br>
+        <form id="inputString">
+            <label for="inputString">Input String: </label>
+            <input type="text" id="inputString" required>
+            <button id="runSimulationButton" class="button">Run Simulation</button>
+        </form>
+        
 
-
+        <br>
+        <br>
         <!-- Create State user input -->
  
         <!-- Add form elements for user input -->
@@ -67,10 +77,10 @@
 
         <!--- links to the scripts -->
         <script src="./Playground.js"></script>
-        <script src="./userInput.js" ></script>
+
         <script type="module" src="./State.js" ></script>
         <script type="module" src="./TuringMachine.js" ></script>
-
+        <script type="module" src="./userInput.js" ></script>
 
     </body>
 

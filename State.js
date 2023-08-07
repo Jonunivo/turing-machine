@@ -10,15 +10,7 @@ export class State{
         this.isRejecting = isRejecting
     }
     //getter methods
-    get isAccepting() {
-        return (this.isAccepting);
-    }
-    get isRejecting() {
-        return (this.isRejecting)
-    }
-    get isStarting() {
-        return (this.isStarting);
-    }
+
     
 }
 
