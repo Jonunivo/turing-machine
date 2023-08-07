@@ -1,4 +1,3 @@
-import {State} from './State.js';
 import {TuringMachine} from './TuringMachine.js'
 
 
@@ -16,11 +15,6 @@ function createState() {
     var isAcceptingState = document.querySelector('input[name="acceptingState"]:checked').value === "true";
     var isRejectingState = document.querySelector('input[name="rejectingState"]:checked').value === "true";
 
-    ////debug
-    const t1 = document.getElementById("head-title");
-    t1.innerHTML = `${stateName}, ${stateId}, ${isStartingState}, ${isAcceptingState},
-    ${isRejectingState} `;
-    ////
     // create State from user input (in TuringMachine.js)
     let currentState = turingMachine.createNewState(stateId, stateName, isStartingState, isAcceptingState, isRejectingState);
     // add accepting/rejecting/starting state to turingMachine object
@@ -55,13 +49,18 @@ function createState() {
 document.getElementById("createStateButton").addEventListener("click", createState);
 
 //create transitions
+//LIMITATION: user is expected to input IDs of states that actually exist
+//LIMITATION: transition labels are limited to 0 & 1
 function createTransition(){
-    //TO DO
+    //handle invalid user input
+    // -- TO DO --
+
+    //fetch user input
     var fromStateId0 = document.getElementById("fromStateId0").value;
     var toStateId0 = document.getElementById("toStateId0").value;
     var fromStateId1 = document.getElementById("fromStateId1").value;
     var toStateId1 = document.getElementById("toStateId1").value;
-    //get corresponding states
+    //get corresponding states from IDs
     var fromState0 = turingMachine.getStateById(fromStateId0);
     var toState0 = turingMachine.getStateById(toStateId0);
     var fromState1 = turingMachine.getStateById(fromStateId1);
@@ -69,9 +68,10 @@ function createTransition(){
     //add transitions to turingMachine set delta
     turingMachine.delta.set([fromState0, "0"], toState0);
     turingMachine.delta.set([fromState1, "1"], toState1);
+    //logging
     console.log(`0: Transition from ${fromState0} to ${toState0}`);
     console.log(`1: Transition from ${fromState1} to ${toState1}`);
-    //display to user log
+    //user log
     displayLogMessage(`Transition created`)
     displayLogMessage(`0: from ${fromStateId0} to ${toStateId0}`)
     displayLogMessage(`1: from ${fromStateId1} to ${toStateId1}`)
@@ -81,7 +81,7 @@ function createTransition(){
 document.getElementById("createTransitionButton").addEventListener("click", createTransition);
 
 
-//runSimulation on inputString (not yet working, since no transitions implemented)
+//runSimulation on inputString & alert user on simulation outcome
 function runSimulation(){
     var inputString = document.getElementById("inputStringField").value;
     var simulationResult = turingMachine.runSimulation(inputString);
@@ -110,7 +110,7 @@ function createTuringMachine(){
 }
 document.getElementById("createTMButton").addEventListener("click", createTuringMachine);
 
-//reset button that destroys TuringMachine
+//reset button that destroys TuringMachine (page reload)
 function reset(){
     location.reload();
 }
