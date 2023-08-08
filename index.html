@@ -16,83 +16,90 @@
     </head>
 
     <body>
-        <h1 id="head-title">This is my Turing Machine</h1>
+        <h1 id="head-title">TuringMachine Version 1.1</h1>
 
-        <!--- Buttons -->
-        <!--- Create TM & Reset-->
-        <div id="resetButtonDiv" class="userInput">
-            <button id="resetButton" class="button">Reset</button>
-        </div>
+       
+        <div id="leftBox">
+            <!--- Reset-->
+            <div id="resetButtonDiv" class="userInput">
+                <button id="resetButton" class="button">Reset</button>
+            </div>
 
 
-        <!--- Input String -->
-        <div id="inputString" class="userInput">
-            <label for="inputStringField">Input String: </label>
-            <input type="text" id="inputStringField" required>
-            <br>
-            <button id="runSimulationButton" class="button" disabled>Run Simulation</button>
+            <!--- Input String -->
+            <div id="inputString" class="userInput">
+                <label for="inputStringField">Input String: </label>
+                <input type="text" id="inputStringField" required>
+                <br>
+                <button id="runSimulationButton" class="button" disabled>Run Simulation</button>
+            </div>
+            <!---user log messages-->
+            <div id="logMessages"></div>
         </div>
         
-        <!--- Create User State -->
-        <div id="stateInput" class="userInput">
-            <!-- Add form elements for user input -->
-            <form id="stateForm">
-                <label for="stateName">State Name:</label>
-                <input type="text" id="stateName" required>
-                <br>
-                <label for="stateId">State ID:</label>
-                <input type="number" id="stateId" min="0" max="1000" readonly>
-                <br>
+        <div id="middleBox">
+            <!--- Create User State -->
+            <div id="stateInput" class="userInput">
+                <!-- Add form elements for user input -->
+                <form id="stateForm">
+                    <label for="stateName" class="textLabel">State Name:</label>
+                    <input type="text" id="stateName" required>
+                    <br>
+                    <label for="stateId">State ID:</label>
+                    <input type="number" id="stateId" min="0" max="1000" readonly>
+                    <br>
 
-                <p>Starting state?</p>
-                <label for="stateStartingYes">Yes</label>
-                <input type="radio" id="stateStartingYes" name="startingState" value="true" required>
-                <br>
-                <label for="stateStartingNo">No</label>
-                <input type="radio" id="stateStartingNo" name="startingState" value="false" required checked>
+                    <p class="radioQuestion">Starting state?</p>
+                    <input type="radio" id="stateStartingYes" name="startingState" value="true" required>
+                    <label class="radioLabel" for="stateStartingYes">Yes</label>
+                    <br>
+                    <input type="radio" id="stateStartingNo" name="startingState" value="false" required checked>
+                    <label class="radioLabel" for="stateStartingNo">No</label>
 
-                <p>Accepting state?</p>
-                <label for="stateAcceptingYes">Yes</label>
-                <input type="radio" id="stateAcceptingYes" name="acceptingState" value="true" required>
-                <br>
-                <label for="stateAcceptingNo">No</label>
-                <input type="radio" id="stateAcceptingNo" name="acceptingState" value="false" required checked>
+                    <p class="radioQuestion">Accepting state?</p>
+                    <input type="radio" id="stateAcceptingYes" name="acceptingState" value="true" required>
+                    <label class="radioLabel" for="stateAcceptingYes">Yes</label>
+                    <br>
+                    <input type="radio" id="stateAcceptingNo" name="acceptingState" value="false" required checked>
+                    <label class="radioLabel" for="stateAcceptingNo">No</label>
 
-                <p>Rejecting state?</p>
-                <label for="stateRejectingYes">Yes</label>
-                <input type="radio" id="stateRejectingYes" name="rejectingState" value="true" required>
-                <br>
-                <label for="stateRejectingNo">No</label>
-                <input type="radio" id="stateRejectingNo" name="rejectingState" value="false" required checked>
+                    <p class="radioQuestion">Rejecting state?</p>
+                    <input type="radio" id="stateRejectingYes" name="rejectingState" value="true" required>
+                    <label class="radioLabel" for="stateRejectingYes">Yes</label>
+                    <br>
+                    <input type="radio" id="stateRejectingNo" name="rejectingState" value="false" required checked>
+                    <label class="radioLabel" for="stateRejectingNo">No</label>
+                    <br>
 
-                <br>
-                <button id="createStateButton" type="button">Create State</button>
-               
-            </form>
+                    <button id="createStateButton" type="button" class="button">Create State</button>
+                    
+                </form>
+            </div>
         </div>
-        <!--- Create User Transition -->
-        <div id="transitionInput" class="userInput">
-            <form id="transitionForm">
-                <p>Read Label 0: </p>
-                <label for="fromStateId0">From State</label>
-                <input type="number" id="fromStateId0" name="transitionField" min="0" required disabled>
-                <br>
-                <label for="toStateId0">To State</label>
-                <input type="number" id="toStateId0" name="transitionField" min="0" required disabled>
+        <div id="rightBox">
+            <!--- Create User Transition -->
+            <div id="transitionInput" class="userInput">
+                <form id="transitionForm">
+                    <p>Read Label 0: </p>
+                    <label for="fromStateId0">From State</label>
+                    <input type="number" id="fromStateId0" name="transitionField" min="0" required disabled>
+                    <br>
+                    <label for="toStateId0">To State</label>
+                    <input type="number" id="toStateId0" name="transitionField" min="0" required disabled>
 
-                <p>Read Label 1: </p>
-                <label for="fromStateId1">From State</label>
-                <input type="number" id="fromStateId1" name="transitionField" min="0" required disabled>
-                <br>
-                <label for="toStateId1">To State</label>
-                <input type="number" id="toStateId1" name="transitionField" min="0" required disabled>
-                <br>
-                <button id="createTransitionButton" type="button" disabled>Create Transition</button>
-            </form>
+                    <p>Read Label 1: </p>
+                    <label for="fromStateId1">From State</label>
+                    <input type="number" id="fromStateId1" name="transitionField" min="0" required disabled>
+                    <br>
+                    <label for="toStateId1">To State</label>
+                    <input type="number" id="toStateId1" name="transitionField" min="0" required disabled>
+                    <br>
+                    <button id="createTransitionButton" type="button" class="button" disabled>Create Transition</button>
+                </form>
+            </div>
         </div>
 
-        <!---user log messages-->
-        <div id="logMessages"></div>
+
 
         <!--- links to the scripts -->
         <script src="./Playground.js"></script>
