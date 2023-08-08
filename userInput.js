@@ -23,7 +23,7 @@ function startTuringMachine(){
         element.disabled = true;
     });
     //disable run simulation
-    document.getElementById("inputStringField").disabled = true;
+    document.getElementById("inputStringField").value = "";
     document.getElementById("runSimulationButton").disabled = true;
     //turing Machine initialized
     createTuringMachine();
@@ -74,12 +74,13 @@ function createState() {
     document.getElementById("toStateId1").setAttribute('max', stateIdSetter);
     //go to nextID
     stateIdSetter++;
-    //unlock create Transition when new or first state created
+    //unlock create Transition when new or first state created & lock run simulation
     if(TransitionSetter < stateIdSetter){
         document.getElementsByName("transitionField").forEach(element => {
             element.disabled = false;
         });
         document.getElementById("createTransitionButton").disabled = false;
+        document.getElementById("runSimulationButton").disabled = true;
     }
 
 
@@ -105,7 +106,6 @@ function createState() {
 document.getElementById("createStateButton").addEventListener("click", createState);
 
 //create transitions
-//LIMITATION: user is expected to input IDs of states that actually exist
 //LIMITATION: transition labels are limited to 0 & 1
 function createTransition(){
     //fetch user input
@@ -121,9 +121,7 @@ function createTransition(){
     //add transitions to turingMachine set delta
     turingMachine.delta.set([fromState0, "0"], toState0);
     turingMachine.delta.set([fromState1, "1"], toState1);
-    //logging
-    console.log(`0: Transition from ${fromState0} to ${toState0}`);
-    console.log(`1: Transition from ${fromState1} to ${toState1}`);
+
 
     //form input helper
     //set from state iterating from 0 to stateIdSetter
@@ -136,11 +134,13 @@ function createTransition(){
             element.disabled = true;
         });
         document.getElementById("createTransitionButton").disabled = true;
-        //enable run simulation
-        document.getElementById("inputStringField").disabled = false;
+        
         document.getElementById("runSimulationButton").disabled = false;
     }
 
+    //logging
+    console.log(`0: Transition from ${fromState0} to ${toState0}`);
+    console.log(`1: Transition from ${fromState1} to ${toState1}`);
     //user log
     displayLogMessage(`Transition created`)
     displayLogMessage(`0: from ${fromStateId0} to ${toStateId0}`)
@@ -162,7 +162,13 @@ function runSimulation(){
         return;
     }
     document.getElementById("inputStringField").value = filteredInput;
+    //prevent no starting state
+    if(turingMachine.startstate === undefined){
+        alert("please create a start state");
+        return;
+    }
 
+    //run Simulation
     var simulationResult = turingMachine.runSimulation(inputString);
     if(simulationResult){
         alert("input accepted!")
@@ -209,24 +215,6 @@ function displayLogMessage(message){
     logMessagesElement.textContent = message;
     logMessagesDiv.appendChild(logMessagesElement);
 }
-
-
-//save created TM
-function saveTuringMachineState() {
-    localStorage.setItem("turingMachineState", JSON.stringify(turingMachine));
-}
-//load saved TM
-function loadTuringMachineState() {
-    const savedState = localStorage.getItem("turingMachineState");
-    if (savedState) {
-        turingMachine = JSON.parse(savedState);
-    } else {
-        // If no saved state found, create a new Turing Machine
-        createTuringMachine();
-    }
-}
-
-
 
 
 //debug helper
