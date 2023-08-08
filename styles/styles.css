@@ -3,25 +3,152 @@
 h1 {
     color: rgb(255, 168, 36);
     font-family: 'Courier New', Courier, monospace;
+    text-align: left;
+    padding-left: 200px;
 }
-.userInput {
-    float: left;
-    margin: 10px;
+
+/* ----- main boxes */
+#leftBox, #middleBox, #rightBox{
+    display: inline-block;
+    vertical-align: top;
+    align-items: center;
+    width: max-content;
+    height: 700px;
+    margin: 1px;
     padding: 10px;
+}
+
+#leftBox {
     border-right: thin solid grey;
 }
 
-#inputString{
-    float: none;
-    border-bottom: thin solid grey;
-    border-right: none;
+#middleBox {
+    border-right: thin solid grey;
 }
 
+/* ---- Reset Button box */
+div#resetButtonDiv{
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---- input string box */
+div#inputString{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    border-top: thin solid grey;
+    align-items: center;
+}
+
+/* ---- log message field */
 #logMessages{
-    float: left;
+    max-height: 600px;
+    overflow: auto;
+    border-top: thin solid grey;
+    padding: 5px;
 }
 
 #logMessage{
     margin: 0;
-    padding: 0;
+    padding-left: 5px;
+}
+
+/*---- State Creation Box*/
+
+/* radio Buttons */
+input[type="radio"]{
+    display: inline-block;
+    appearance: none;
+    border: 2px solid #000000;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+} 
+input[type="radio"]:checked{
+    background-color: #4CAF50;
+}
+input[type="radio"]:disabled{
+    border: 2px solid rgb(194, 194, 194);
+    background-color: #ffffff;
+}
+input[type="radio"]#stateStartingNo:checked {
+    background-color: #ff4800;
+}
+input[type="radio"]#stateStartingNo:disabled {
+    background-color: #ffa784;
+}
+input[type="radio"]#stateAcceptingNo:checked {
+    background-color: #ff4800;
+}
+input[type="radio"]#stateRejectingNo:checked {
+    background-color: #ff4800;
+}
+/* label for radio Buttons */
+label.radioLabel {
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+    padding: 10px;
+    background-color: #f2f2f2;
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+#stateInput label{
+    order: 2
+}
+/* Radio Button Questions */
+p.radioQuestion {
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+
+/*text input fields */
+input[type="text"]{
+    width: 150px;
+    margin: 5px;
+    border: 2px solid rgb(109, 109, 109);
+    border-radius: 4px;
+}
+input[type="text"]:disabled{
+    border: 2px solid rgb(194, 194, 194);
+}
+
+/*number input fields */
+input[type="number"]{
+    width: 150px;
+    margin: 5px;
+    border: 2px solid rgb(109, 109, 109);
+    border-radius: 4px;
+
+}
+input[type="number"]:disabled {
+    border: 2px solid rgb(194, 194, 194);
+}
+
+
+/* regular buttons */
+.button {
+    width: 200px;
+    background-color: rgba(157, 255, 0, 0.253);
+    color: black;
+    border: 2px solid #4CAF50;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+}
+.button:disabled{
+    background-color: white;
+    color: gray;
+    border: 2px solid #ff3c004f;
+}
+
+.button#resetButton{
+    background-color: rgb(231, 231, 231);
+    border: 2px solid #000000
 }
