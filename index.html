@@ -20,21 +20,17 @@
 
         <!--- Buttons -->
         <!--- Create TM & Reset-->
-        <div id="createTM" class="userInput">
-            <button id="createTMButton" class="button">Create TM</button>
-            <br>
+        <div id="resetButtonDiv" class="userInput">
             <button id="resetButton" class="button">Reset</button>
         </div>
 
 
         <!--- Input String -->
         <div id="inputString" class="userInput">
-            <form id="inputStringForm">
-                <label for="inputStringField">Input String: </label>
-                <input type="text" id="inputStringField" required>
-                <br>
-                <button id="runSimulationButton" class="button">Run Simulation</button>
-            </form>
+            <label for="inputStringField">Input String: </label>
+            <input type="text" id="inputStringField" required disabled>
+            <br>
+            <button id="runSimulationButton" class="button" disabled>Run Simulation</button>
         </div>
         
         <!--- Create User State -->
@@ -45,7 +41,7 @@
                 <input type="text" id="stateName" required>
                 <br>
                 <label for="stateId">State ID:</label>
-                <input type="number" id="stateId" min="0" max="1000" required>
+                <input type="number" id="stateId" min="0" max="1000" readonly>
                 <br>
 
                 <p>Starting state?</p>
@@ -53,25 +49,25 @@
                 <input type="radio" id="stateStartingYes" name="startingState" value="true" required>
                 <br>
                 <label for="stateStartingNo">No</label>
-                <input type="radio" id="stateStartingNo" name="startingState" value="false" required>
+                <input type="radio" id="stateStartingNo" name="startingState" value="false" required checked>
 
                 <p>Accepting state?</p>
                 <label for="stateAcceptingYes">Yes</label>
                 <input type="radio" id="stateAcceptingYes" name="acceptingState" value="true" required>
                 <br>
                 <label for="stateAcceptingNo">No</label>
-                <input type="radio" id="stateAcceptingNo" name="acceptingState" value="false" required>
+                <input type="radio" id="stateAcceptingNo" name="acceptingState" value="false" required checked>
 
                 <p>Rejecting state?</p>
                 <label for="stateRejectingYes">Yes</label>
                 <input type="radio" id="stateRejectingYes" name="rejectingState" value="true" required>
                 <br>
                 <label for="stateRejectingNo">No</label>
-                <input type="radio" id="stateRejectingNo" name="rejectingState" value="false" required>
+                <input type="radio" id="stateRejectingNo" name="rejectingState" value="false" required checked>
 
                 <br>
-
                 <button id="createStateButton" type="button">Create State</button>
+               
             </form>
         </div>
         <!--- Create User Transition -->
@@ -79,19 +75,19 @@
             <form id="transitionForm">
                 <p>Read Label 0: </p>
                 <label for="fromStateId0">From State</label>
-                <input type="number" id="fromStateId0" required>
+                <input type="number" id="fromStateId0" name="transitionField" min="0" required disabled>
                 <br>
                 <label for="toStateId0">To State</label>
-                <input type="number" id="toStateId0" required>
+                <input type="number" id="toStateId0" name="transitionField" min="0" required disabled>
 
                 <p>Read Label 1: </p>
                 <label for="fromStateId1">From State</label>
-                <input type="number" id="fromStateId1" required>
+                <input type="number" id="fromStateId1" name="transitionField" min="0" required disabled>
                 <br>
                 <label for="toStateId1">To State</label>
-                <input type="number" id="toStateId1" required>
+                <input type="number" id="toStateId1" name="transitionField" min="0" required disabled>
                 <br>
-                <button id="createTransitionButton" type="button">Create Transition</button>
+                <button id="createTransitionButton" type="button" disabled>Create Transition</button>
             </form>
         </div>
 

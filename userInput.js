@@ -5,8 +5,31 @@ import {TuringMachine} from './TuringMachine.js'
 //TuringMachine
 let turingMachine;
 
+//Form Default Values helper
+//set first StateID to 0
+let stateIdSetter = 0;
+document.getElementById("stateId").value = stateIdSetter;
+//set first From State to 0
+let TransitionSetter = 0;
+document.getElementById("fromStateId0").value = TransitionSetter;
+document.getElementById("fromStateId1").value = TransitionSetter;
 
-//creates a State from the user provided input & adds it to turingMachine
+
+//function that is run when page is loaded (also runs on reset())
+function startTuringMachine(){
+    //disable transition
+    document.getElementsByName("transitionField").forEach(element => {
+        element.value = 0;
+        element.disabled = true;
+    });
+    //disable run simulation
+    document.getElementById("inputStringField").disabled = true;
+    document.getElementById("runSimulationButton").disabled = true;
+    //turing Machine initialized
+    createTuringMachine();
+}
+window.addEventListener("load", startTuringMachine);
+
 function createState() {
     // Get the user input from the input fields and radio buttons
     var stateName = document.getElementById("stateName").value;
@@ -21,7 +44,17 @@ function createState() {
     if(isStartingState){
         turingMachine.startstate=currentState;
         console.log("starting state set");
+        //disable Starting state radio buttons & set to No
+        document.getElementById("stateStartingYes").disabled = true;
+        document.getElementById("stateStartingNo").disabled = true;
+        document.getElementById("stateStartingNo").checked = true;
     }
+    //catch State not allowed to be Accepting & Rejecting
+    if(isAcceptingState&&isRejectingState){
+        alert("A state cannot be Accepting & Rejecting at the same time");
+        return;
+    }
+    
     if(isAcceptingState){
         turingMachine.acceptstate=currentState;
         console.log("accepting state set");
@@ -30,6 +63,27 @@ function createState() {
         turingMachine.rejectstate=currentState;
         console.log("rejecting state set");
     }
+
+    //form Validation
+    //set StateID of next state
+    document.getElementById("stateId").value = stateIdSetter+1;
+    //set max of from & to states to max ID of created States (Transition Form)
+    document.getElementById("fromStateId0").setAttribute('max', stateIdSetter);
+    document.getElementById("toStateId0").setAttribute('max', stateIdSetter);
+    document.getElementById("fromStateId1").setAttribute('max', stateIdSetter);
+    document.getElementById("toStateId1").setAttribute('max', stateIdSetter);
+    //go to nextID
+    stateIdSetter++;
+    //unlock create Transition when new or first state created
+    if(TransitionSetter < stateIdSetter){
+        document.getElementsByName("transitionField").forEach(element => {
+            element.disabled = false;
+        });
+        document.getElementById("createTransitionButton").disabled = false;
+    }
+
+
+    //logging
     console.log("State created: ", stateName, " ", stateId);
     console.log("TM now: ", turingMachine);
     //log to user window
@@ -45,6 +99,8 @@ function createState() {
         displayLogMessage(`Accepting State`)
     }
     displayLogMessage("----------")
+
+
 }
 document.getElementById("createStateButton").addEventListener("click", createState);
 
@@ -52,9 +108,6 @@ document.getElementById("createStateButton").addEventListener("click", createSta
 //LIMITATION: user is expected to input IDs of states that actually exist
 //LIMITATION: transition labels are limited to 0 & 1
 function createTransition(){
-    //handle invalid user input
-    // -- TO DO --
-
     //fetch user input
     var fromStateId0 = document.getElementById("fromStateId0").value;
     var toStateId0 = document.getElementById("toStateId0").value;
@@ -71,6 +124,23 @@ function createTransition(){
     //logging
     console.log(`0: Transition from ${fromState0} to ${toState0}`);
     console.log(`1: Transition from ${fromState1} to ${toState1}`);
+
+    //form input helper
+    //set from state iterating from 0 to stateIdSetter
+    TransitionSetter++;
+    document.getElementById("fromStateId0").value = TransitionSetter;
+    document.getElementById("fromStateId1").value = TransitionSetter;
+    //lock input when all fromIDs done
+    if(TransitionSetter === stateIdSetter){
+        document.getElementsByName("transitionField").forEach(element => {
+            element.disabled = true;
+        });
+        document.getElementById("createTransitionButton").disabled = true;
+        //enable run simulation
+        document.getElementById("inputStringField").disabled = false;
+        document.getElementById("runSimulationButton").disabled = false;
+    }
+
     //user log
     displayLogMessage(`Transition created`)
     displayLogMessage(`0: from ${fromStateId0} to ${toStateId0}`)
@@ -83,7 +153,16 @@ document.getElementById("createTransitionButton").addEventListener("click", crea
 
 //runSimulation on inputString & alert user on simulation outcome
 function runSimulation(){
+    //prevent user from inputting anything else than a bitstring
     var inputString = document.getElementById("inputStringField").value;
+    var filteredInput = inputString.replace(/[^01]/g, '');
+    if(inputString !== filteredInput){
+        document.getElementById("inputStringField").value = filteredInput;
+        alert("please only input bitstrings");
+        return;
+    }
+    document.getElementById("inputStringField").value = filteredInput;
+
     var simulationResult = turingMachine.runSimulation(inputString);
     if(simulationResult){
         alert("input accepted!")
@@ -108,10 +187,13 @@ function createTuringMachine(){
     displayLogMessage("TM Created!")
     displayLogMessage("-------------------------")
 }
-document.getElementById("createTMButton").addEventListener("click", createTuringMachine);
+//document.getElementById("createTMButton").addEventListener("click", createTuringMachine);
 
-//reset button that destroys TuringMachine (page reload)
+//reset button that destroys States & Transitions (page reload)
 function reset(){
+
+
+    //reload page
     location.reload();
 }
 document.getElementById("resetButton").addEventListener("click", reset);
@@ -127,6 +209,25 @@ function displayLogMessage(message){
     logMessagesElement.textContent = message;
     logMessagesDiv.appendChild(logMessagesElement);
 }
+
+
+//save created TM
+function saveTuringMachineState() {
+    localStorage.setItem("turingMachineState", JSON.stringify(turingMachine));
+}
+//load saved TM
+function loadTuringMachineState() {
+    const savedState = localStorage.getItem("turingMachineState");
+    if (savedState) {
+        turingMachine = JSON.parse(savedState);
+    } else {
+        // If no saved state found, create a new Turing Machine
+        createTuringMachine();
+    }
+}
+
+
+
 
 //debug helper
 

@@ -98,7 +98,6 @@ export class TuringMachine{
     }
 //helper function that returns corrseponding state when id of state given
     getStateById(id){
-        console.log("ddd");
         let states = this.states;
         for(const state of states){
             if(state.id === id){
