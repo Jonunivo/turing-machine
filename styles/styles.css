@@ -58,55 +58,55 @@ div#inputString{
 
 /*---- State Creation Box*/
 
-/* radio Buttons */
-input[type="radio"]{
-    display: inline-block;
-    appearance: none;
-    border: 2px solid #000000;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-} 
-input[type="radio"]:checked{
-    background-color: #4CAF50;
-}
-input[type="radio"]:disabled{
-    border: 2px solid rgb(194, 194, 194);
-    background-color: #ffffff;
-}
-input[type="radio"]#stateStartingNo:checked {
-    background-color: #ff4800;
-}
-input[type="radio"]#stateStartingNo:disabled {
-    background-color: #ffa784;
-}
-input[type="radio"]#stateAcceptingNo:checked {
-    background-color: #ff4800;
-}
-input[type="radio"]#stateRejectingNo:checked {
-    background-color: #ff4800;
-}
-/* label for radio Buttons */
-label.radioLabel {
-    display: inline-block;
-    width: 50px;
-    text-align: center;
-    padding: 10px;
-    background-color: #f2f2f2;
-    cursor: pointer;
-    margin: 5px;
-    transition: background-color 0.3s;
-}
-#stateInput label{
-    order: 2
-}
-/* Radio Button Questions */
-p.radioQuestion {
-    margin-bottom: 5px;
-    text-align: center;
+/*on off switch  code adapted from https://alvarotrigo.com/blog/toggle-switch-css/*/
+input[type=checkbox]{
+    height: 0;
+    width: 0;
+    visibility: hidden;
 }
 
+.checkboxLabel {
+    cursor: pointer;
+    text-indent: 60px;
+
+    width: 40px;
+    height: 22px;
+    background: rgb(216, 74, 74);
+    display: block;
+    border-radius: 100px;
+    border: solid 2px rgb(216, 74, 74);
+    position: relative;
+}
+
+input[type=checkbox]:disabled + .checkboxLabel{
+    background-color: #ff9f9f88;
+    border: 2px solid rgb(194, 194, 194);
+}
+
+.checkboxLabel:after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+input[type=checkbox]:checked + .checkboxLabel {
+    background: #bfdf56;
+    border: solid 2px #bfdf56;
+}
+
+input[type=checkbox]:checked + label:after {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+}
+
+
+  
 
 /*text input fields */
 input[type="text"]{

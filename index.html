@@ -49,26 +49,15 @@
                     <input type="number" id="stateId" min="0" max="1000" readonly>
                     <br>
 
-                    <p class="radioQuestion">Starting state?</p>
-                    <input type="radio" id="stateStartingYes" name="startingState" value="true" required>
-                    <label class="radioLabel" for="stateStartingYes">Yes</label>
-                    <br>
-                    <input type="radio" id="stateStartingNo" name="startingState" value="false" required checked>
-                    <label class="radioLabel" for="stateStartingNo">No</label>
+                    <input type="checkbox" id="stateStarting" name="startingState" value="false" required checked>
+                    <label class="checkboxLabel" for="stateStarting">Starting?</label>
 
-                    <p class="radioQuestion">Accepting state?</p>
-                    <input type="radio" id="stateAcceptingYes" name="acceptingState" value="true" required>
-                    <label class="radioLabel" for="stateAcceptingYes">Yes</label>
-                    <br>
-                    <input type="radio" id="stateAcceptingNo" name="acceptingState" value="false" required checked>
-                    <label class="radioLabel" for="stateAcceptingNo">No</label>
+                    <input type="checkbox" id="stateAccepting" name="acceptingState" value="true" required>
+                    <label class="checkboxLabel" for="stateAccepting">Accepting?</label>
 
-                    <p class="radioQuestion">Rejecting state?</p>
-                    <input type="radio" id="stateRejectingYes" name="rejectingState" value="true" required>
-                    <label class="radioLabel" for="stateRejectingYes">Yes</label>
-                    <br>
-                    <input type="radio" id="stateRejectingNo" name="rejectingState" value="false" required checked>
-                    <label class="radioLabel" for="stateRejectingNo">No</label>
+
+                    <input type="checkbox" id="stateRejecting" name="rejectingState" value="true" required>
+                    <label class="checkboxLabel" for="stateRejecting">Rejecting?</label>
                     <br>
 
                     <button id="createStateButton" type="button" class="button">Create State</button>

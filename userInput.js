@@ -34,26 +34,27 @@ function createState() {
     // Get the user input from the input fields and radio buttons
     var stateName = document.getElementById("stateName").value;
     var stateId = document.getElementById("stateId").value;
-    var isStartingState = document.querySelector('input[name="startingState"]:checked').value === "true";
-    var isAcceptingState = document.querySelector('input[name="acceptingState"]:checked').value === "true";
-    var isRejectingState = document.querySelector('input[name="rejectingState"]:checked').value === "true";
+    var isStartingState = document.getElementById("stateStarting").checked === true;
+    var isAcceptingState = document.getElementById("stateAccepting").checked === true;
+    var isRejectingState = document.getElementById("stateRejecting").checked === true;
 
     // create State from user input (in TuringMachine.js)
     let currentState = turingMachine.createNewState(stateId, stateName, isStartingState, isAcceptingState, isRejectingState);
-    // add accepting/rejecting/starting state to turingMachine object
-    if(isStartingState){
-        turingMachine.startstate=currentState;
-        console.log("starting state set");
-        //disable Starting state radio buttons & set to No
-        document.getElementById("stateStartingYes").disabled = true;
-        document.getElementById("stateStartingNo").disabled = true;
-        document.getElementById("stateStartingNo").checked = true;
-    }
     //catch State not allowed to be Accepting & Rejecting
     if(isAcceptingState&&isRejectingState){
         alert("A state cannot be Accepting & Rejecting at the same time");
         return;
     }
+    
+    // add accepting/rejecting/starting state to turingMachine object
+    if(isStartingState){
+        turingMachine.startstate=currentState;
+        console.log("starting state set");
+        //disable Starting state radio buttons & set to No
+        document.getElementById("stateStarting").disabled = true;
+        document.getElementById("stateStarting").checked = false;
+    }
+
     
     if(isAcceptingState){
         turingMachine.acceptstate=currentState;
