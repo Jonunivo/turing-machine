@@ -26,10 +26,6 @@ export class TuringMachine{
     //               type input = string
     runSimulation(input) {
         let currentState = this.startstate;
-        //debug
-        console.log(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
-        console.log(`   next state if 0: ${this.transition(currentState, this.delta, "0").id}`);
-        console.log(`   next state if 1: ${this.transition(currentState, this.delta, "1").id}`);
         let i = 0;
         let length = input.length;
         while(currentState !== this.acceptstate &&
@@ -39,10 +35,11 @@ export class TuringMachine{
                 let currentToken = input.substring(0,1);
                 input = input.substring(1);
                 ////debug/logging
-                console.log(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
+                simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
                 console.log(`   next state if 0: ${this.transition(currentState, this.delta, "0").id}`);
                 console.log(`   next state if 1: ${this.transition(currentState, this.delta, "1").id}`);
-                console.log(`   current Token:   ${currentToken}`);
+                simulationLogMessage(`   current Token:   ${currentToken}`);
+                simulationLogMessage(`--------`)
                 ////
                 //transition
                 currentState = this.transition(currentState, this.delta, currentToken);
@@ -50,17 +47,17 @@ export class TuringMachine{
                 
             }
         if(currentState === this.acceptstate){
-            console.log(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
-            console.log("--- accept state reached! ---");
+            simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
+            simulationLogMessage("--- accept state reached! ---");
             return true;
         }
         else if(currentState === this.rejectstate){
-            console.log("--- reject state reached! ---")
+            simulationLogMessage("--- reject state reached! ---")
             return false;
         }
         else{
-            console.log("end of string reached, missed accept/reject state")
-            console.log("-> rejecting input")
+            simulationLogMessage("end of string reached, missed accept/reject state")
+            simulationLogMessage("-> rejecting input")
             return false;
         }
 
@@ -109,6 +106,18 @@ export class TuringMachine{
 
 
 
+}
+
+//helper functions that add messages to the user screen (creates p element)
+function simulationLogMessage(message){
+    //get id from HTML
+    const logMessagesDiv = document.getElementById("simulationLogMessages");
+    //create log window element
+    const logMessagesElement = document.createElement("p");
+    logMessagesElement.setAttribute("id", "simulationLogMessage")
+    logMessagesElement.setAttribute("class", "logMessage")
+    logMessagesElement.textContent = message;
+    logMessagesDiv.appendChild(logMessagesElement);
 }
 
 // --- Helper Functions ---

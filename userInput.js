@@ -22,6 +22,7 @@ function startTuringMachine(){
         element.value = 0;
         element.disabled = true;
     });
+    document.getElementById("createTransitionButton").disabled= true;
     //disable run simulation
     document.getElementById("inputStringField").value = "";
     document.getElementById("runSimulationButton").disabled = true;
@@ -89,18 +90,18 @@ function createState() {
     console.log("State created: ", stateName, " ", stateId);
     console.log("TM now: ", turingMachine);
     //log to user window
-    displayLogMessage(`State ${stateName}`)
-    displayLogMessage(`ID: ${stateId}`)
+    stateLogMessage(`State ${stateName}`)
+    stateLogMessage(`ID: ${stateId}`)
     if(isStartingState){
-        displayLogMessage(`Starting State`)
+        stateLogMessage(`Starting State`)
     }
     if(isRejectingState){
-        displayLogMessage(`Rejecting State`)
+        stateLogMessage(`Rejecting State`)
     }
     if(isAcceptingState){
-        displayLogMessage(`Accepting State`)
+        stateLogMessage(`Accepting State`)
     }
-    displayLogMessage("----------")
+    stateLogMessage("----------")
 
 
 }
@@ -143,10 +144,10 @@ function createTransition(){
     console.log(`0: Transition from ${fromState0} to ${toState0}`);
     console.log(`1: Transition from ${fromState1} to ${toState1}`);
     //user log
-    displayLogMessage(`Transition created`)
-    displayLogMessage(`0: from ${fromStateId0} to ${toStateId0}`)
-    displayLogMessage(`1: from ${fromStateId1} to ${toStateId1}`)
-    displayLogMessage(`--------`)
+    transitionLogMessage(`Transition created`)
+    transitionLogMessage(`0: from ${fromStateId0} to ${toStateId0}`)
+    transitionLogMessage(`1: from ${fromStateId1} to ${toStateId1}`)
+    transitionLogMessage(`--------`)
 
 }
 document.getElementById("createTransitionButton").addEventListener("click", createTransition);
@@ -154,6 +155,8 @@ document.getElementById("createTransitionButton").addEventListener("click", crea
 
 //runSimulation on inputString & alert user on simulation outcome
 function runSimulation(){
+    //clear userSimulationLog
+    document.getElementById("simulationLogMessages").innerHTML="";
     //prevent user from inputting anything else than a bitstring
     var inputString = document.getElementById("inputStringField").value;
     var filteredInput = inputString.replace(/[^01]/g, '');
@@ -191,8 +194,8 @@ function createTuringMachine(){
     turingMachine = new TuringMachine(states, sigma, gamma, transitions, undefined, undefined, undefined);
     console.log("successfully created TM:", turingMachine);
     //display to user log
-    displayLogMessage("TM Created!")
-    displayLogMessage("-------------------------")
+    simulationLogMessage("TM Created!")
+    simulationLogMessage("-------------------------")
 }
 //document.getElementById("createTMButton").addEventListener("click", createTuringMachine);
 
@@ -206,13 +209,34 @@ function reset(){
 document.getElementById("resetButton").addEventListener("click", reset);
 
 
-//helper function that add messages to the user screen (creates p element)
-function displayLogMessage(message){
+//helper functions that add messages to the user screen (creates p element)
+function simulationLogMessage(message){
     //get id from HTML
-    const logMessagesDiv = document.getElementById("logMessages");
+    const logMessagesDiv = document.getElementById("simulationLogMessages");
     //create log window element
     const logMessagesElement = document.createElement("p");
-    logMessagesElement.setAttribute("id", "logMessage")
+    logMessagesElement.setAttribute("id", "simulationLogMessage")
+    logMessagesElement.setAttribute("class", "logMessage")
+    logMessagesElement.textContent = message;
+    logMessagesDiv.appendChild(logMessagesElement);
+}
+function stateLogMessage(message){
+    //get id from HTML
+    const logMessagesDiv = document.getElementById("stateLogMessages");
+    //create log window element
+    const logMessagesElement = document.createElement("p");
+    logMessagesElement.setAttribute("id", "stateLogMessage")
+    logMessagesElement.setAttribute("class", "logMessage")
+    logMessagesElement.textContent = message;
+    logMessagesDiv.appendChild(logMessagesElement);
+}
+function transitionLogMessage(message){
+    //get id from HTML
+    const logMessagesDiv = document.getElementById("transitionLogMessages");
+    //create log window element
+    const logMessagesElement = document.createElement("p");
+    logMessagesElement.setAttribute("id", "transitionLogMessage")
+    logMessagesElement.setAttribute("class", "logMessage")
     logMessagesElement.textContent = message;
     logMessagesDiv.appendChild(logMessagesElement);
 }

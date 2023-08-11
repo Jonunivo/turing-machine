@@ -46,14 +46,14 @@ div#inputString{
 }
 
 /* ---- log message field */
-#logMessages{
+.logMessages{
     max-height: 600px;
     overflow: auto;
     border-top: thin solid grey;
     padding: 5px;
 }
 
-#logMessage{
+.logMessage{
     margin: 0;
     padding-left: 5px;
 }
