@@ -12,13 +12,15 @@ h1 {
     display: inline-block;
     vertical-align: top;
     align-items: center;
-    width: max-content;
+    width: 260px;
     height: 700px;
     margin: 1px;
     padding: 10px;
+    border-right: thin solid grey;
 }
 
 #leftBox {
+    width: 210px;
     border-right: thin solid grey;
 }
 
@@ -104,7 +106,15 @@ input[type=checkbox]:checked + label:after {
     left: calc(100% - 2px);
     transform: translateX(-100%);
 }
+/*create state button position to center*/
+#createStateButtonDiv{
+    text-align: center;
+}
 
+/*create transition button position to center*/
+#createTransitionButtonDiv{
+    text-align: center;
+}
 
   
 
