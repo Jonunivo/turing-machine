@@ -151,6 +151,15 @@ function createTransition(){
 }
 document.getElementById("createTransitionButton").addEventListener("click", createTransition);
 
+//Delete last created State
+function deleteLastState(){
+    //TO DO
+document.getElementById("deleteStateButton").addEventListener("click", deleteLastState);
+//delete last created transition
+function deleteLastTransition(){
+    //TO DO
+}
+documentgetElementById("deleteTransitionButton").addEventListener("click", deleteLastState);
 
 //runSimulation on inputString & alert user on simulation outcome
 function runSimulation(){
@@ -200,8 +209,6 @@ function createTuringMachine(){
 
 //reset button that destroys States & Transitions (page reload)
 function reset(){
-
-
     //reload page
     location.reload();
 }
