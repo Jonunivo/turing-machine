@@ -164,7 +164,13 @@ input[type=checkbox]:checked + label:after {
     text-align: center;
 }
 /* Number box inherited from State ID number box */
-
+/* FromState field */
+#fromStateId0:disabled{
+    color: #000000;
+}
+#fromStateId1:disabled{
+    color: #000000;
+}
 /* --- create transition button --- */
 #createTransitionButtonDiv{
     text-align: center;

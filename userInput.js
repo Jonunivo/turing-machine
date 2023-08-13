@@ -78,9 +78,8 @@ function createState() {
     stateIdSetter++;
     //unlock create Transition when new or first state created & lock run simulation
     if(TransitionSetter < stateIdSetter){
-        document.getElementsByName("transitionField").forEach(element => {
-            element.disabled = false;
-        });
+        document.getElementById("toStateId0").disabled=false;
+        document.getElementById("toStateId1").disabled=false;
         document.getElementById("createTransitionButton").disabled = false;
         document.getElementById("runSimulationButton").disabled = true;
     }
