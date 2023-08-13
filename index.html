@@ -21,13 +21,13 @@
        
         <div id="leftBox">
             <!--- Reset-->
-            <div id="resetButtonDiv" class="userInput">
+            <div id="resetButtonDiv">
                 <button id="resetButton" class="button">Reset</button>
             </div>
 
 
             <!--- Input String -->
-            <div id="inputString" class="userInput">
+            <div id="inputString">
                 <label for="inputStringField">Input String: </label>
                 <input type="text" id="inputStringField" required>
                 <br>
@@ -42,57 +42,69 @@
             <div id="stateInput" class="userInput">
                 <!-- Add form elements for user input -->
                 <form id="stateForm">
-                    <label for="stateName" class="textLabel">State Name:</label>
-                    <input type="text" id="stateName" required>
+                    <div class="textFieldDiv">
+                        <label for="stateName" class="textLabel">State Name:</label>
+                        <input type="text" id="stateName" required>
+                    </div>
+                    <div class="stateIdDiv" id="stateIdState">
+                        <label class="stateIdLabel" for="stateId">State ID:</label>
+                        <input type="number" id="stateId" min="0" max="1000" readonly disabled>
+                    </div>
+
+                    <div class="sliderDiv">
+                        <input type="checkbox" id="stateStarting" name="startingState" value="false" required checked>
+                        <label class="checkboxLabel" for="stateStarting">Starting?</label>
+                    </div>
+                    <div class="sliderDiv">
+                        <input type="checkbox" id="stateAccepting" name="acceptingState" value="true" required>
+                        <label class="checkboxLabel" for="stateAccepting">Accepting?</label>
+                    </div>
+                    <div class="sliderDiv">
+                        <input type="checkbox" id="stateRejecting" name="rejectingState" value="true" required>
+                        <label class="checkboxLabel" for="stateRejecting">Rejecting?</label>
+                    </div>
                     <br>
-                    <label for="stateId">State ID:</label>
-                    <input type="number" id="stateId" min="0" max="1000" readonly>
-                    <br>
-
-                    <input type="checkbox" id="stateStarting" name="startingState" value="false" required checked>
-                    <label class="checkboxLabel" for="stateStarting">Starting?</label>
-
-                    <input type="checkbox" id="stateAccepting" name="acceptingState" value="true" required>
-                    <label class="checkboxLabel" for="stateAccepting">Accepting?</label>
-
-
-                    <input type="checkbox" id="stateRejecting" name="rejectingState" value="true" required>
-                    <label class="checkboxLabel" for="stateRejecting">Rejecting?</label>
                     <br>
                     <div id="createStateButtonDiv">
                         <button id="createStateButton" type="button" class="button">Create State</button>
                     </div>
-                    
-                    <!---state log messages-->
-                    <div id="stateLogMessages" class="logMessages"></div>
                 </form>
-            </div>
+            </div> 
+            <!---state log messages-->
+            <div id="stateLogMessages" class="logMessages"></div>
         </div>
         <div id="rightBox">
             <!--- Create User Transition -->
             <div id="transitionInput" class="userInput">
                 <form id="transitionForm">
-                    <p>Read Label 0: </p>
-                    <label for="fromStateId0">From State</label>
-                    <input type="number" id="fromStateId0" name="transitionField" min="0" required disabled>
+                    <p class="readLabel">Read Label 0: </p>
+                    <div class="stateIdDiv">
+                        <label class="stateIdLabel" for="fromStateId0">From State:</label>
+                        <input type="number" id="fromStateId0" name="transitionField" min="0" required disabled>
+                    </div>
+                    <div class="stateIdDiv">
+                        <label class="stateIdLabel" for="toStateId0">To State:</label>
+                        <input type="number" id="toStateId0" name="transitionField" min="0" required disabled>
+                    </div>
                     <br>
-                    <label for="toStateId0">To State</label>
-                    <input type="number" id="toStateId0" name="transitionField" min="0" required disabled>
-
-                    <p>Read Label 1: </p>
-                    <label for="fromStateId1">From State</label>
-                    <input type="number" id="fromStateId1" name="transitionField" min="0" required disabled>
-                    <br>
-                    <label for="toStateId1">To State</label>
-                    <input type="number" id="toStateId1" name="transitionField" min="0" required disabled>
+                    <p class="readLabel">Read Label 1: </p>
+                    <div class="stateIdDiv">
+                        <label class="stateIdLabel" for="fromStateId1">From State:</label>
+                        <input type="number" id="fromStateId1" name="transitionField" min="0" required disabled>
+                    </div>
+                    <div class="stateIdDiv">
+                        <label class="stateIdLabel" for="toStateId1">To State:</label>
+                        <input type="number" id="toStateId1" name="transitionField" min="0" required disabled>
+                    </div>
                     <br>
                     <div id="createTransitionButtonDiv">
                         <button id="createTransitionButton" type="button" class="button" disabled>Create Transition</button>
                     </div>
-                    <!---transition log messages-->
-                    <div id="transitionLogMessages" class="logMessages"></div>
                 </form>
             </div>
+                    <!---transition log messages-->
+            <div id="transitionLogMessages" class="logMessages"></div>
+            
         </div>
 
 
