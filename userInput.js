@@ -154,12 +154,13 @@ document.getElementById("createTransitionButton").addEventListener("click", crea
 //Delete last created State
 function deleteLastState(){
     //TO DO
+}
 document.getElementById("deleteStateButton").addEventListener("click", deleteLastState);
 //delete last created transition
 function deleteLastTransition(){
     //TO DO
 }
-documentgetElementById("deleteTransitionButton").addEventListener("click", deleteLastState);
+document.getElementById("deleteTransitionButton").addEventListener("click", deleteLastState);
 
 //runSimulation on inputString & alert user on simulation outcome
 function runSimulation(){

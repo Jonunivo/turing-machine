@@ -25,40 +25,79 @@ export class TuringMachine{
     //preconditions: type turingmachine = TuringMachine, fully defined
     //               type input = string
     runSimulation(input) {
+        let stopOnAcceptReject = document.getElementById("modeSwitch").checked === true;
         let currentState = this.startstate;
         let i = 0;
         let length = input.length;
-        while(currentState !== this.acceptstate &&
-            currentState !== this.rejectstate &&
-            i<length){
-                //consume character & execute transition function
-                let currentToken = input.substring(0,1);
-                input = input.substring(1);
-                ////debug/logging
+
+        //mode 1: stop when accept / reject state reached
+        if(stopOnAcceptReject){
+            while(currentState !== this.acceptstate &&
+                currentState !== this.rejectstate &&
+                i<length){
+                    //consume character & execute transition function
+                    let currentToken = input.substring(0,1);
+                    input = input.substring(1);
+                    ////debug/logging
+                    simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
+                    console.log(`   next state if 0: ${this.transition(currentState, this.delta, "0").id}`);
+                    console.log(`   next state if 1: ${this.transition(currentState, this.delta, "1").id}`);
+                    simulationLogMessage(`   current Token:   ${currentToken}`);
+                    simulationLogMessage(`--------`)
+                    ////
+                    //transition
+                    currentState = this.transition(currentState, this.delta, currentToken);
+                    i++;
+                    
+                }
+            if(currentState === this.acceptstate){
                 simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
-                console.log(`   next state if 0: ${this.transition(currentState, this.delta, "0").id}`);
-                console.log(`   next state if 1: ${this.transition(currentState, this.delta, "1").id}`);
-                simulationLogMessage(`   current Token:   ${currentToken}`);
-                simulationLogMessage(`--------`)
-                ////
-                //transition
-                currentState = this.transition(currentState, this.delta, currentToken);
-                i++;
-                
+                simulationLogMessage("--- accept state reached! ---");
+                return true;
             }
-        if(currentState === this.acceptstate){
-            simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
-            simulationLogMessage("--- accept state reached! ---");
-            return true;
+            else if(currentState === this.rejectstate){
+                simulationLogMessage("--- reject state reached! ---")
+                return false;
+            }
+            else{
+                simulationLogMessage("end of string reached, missed accept/reject state")
+                simulationLogMessage("-> rejecting input")
+                return false;
+            }
         }
-        else if(currentState === this.rejectstate){
-            simulationLogMessage("--- reject state reached! ---")
-            return false;
-        }
+        
+        //mode : continue until end of string
         else{
-            simulationLogMessage("end of string reached, missed accept/reject state")
-            simulationLogMessage("-> rejecting input")
-            return false;
+            while(i<length){
+                    //consume character & execute transition function
+                    let currentToken = input.substring(0,1);
+                    input = input.substring(1);
+                    ////debug/logging
+                    simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
+                    console.log(`   next state if 0: ${this.transition(currentState, this.delta, "0").id}`);
+                    console.log(`   next state if 1: ${this.transition(currentState, this.delta, "1").id}`);
+                    simulationLogMessage(`   current Token:   ${currentToken}`);
+                    simulationLogMessage(`--------`)
+                    ////
+                    //transition
+                    currentState = this.transition(currentState, this.delta, currentToken);
+                    i++;
+                    
+                }
+            if(currentState === this.acceptstate){
+                simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
+                simulationLogMessage("--- end state accepting! ---");
+                return true;
+            }
+            else if(currentState === this.rejectstate){
+                simulationLogMessage("--- end state rejecting! ---")
+                return false;
+            }
+            else{
+                simulationLogMessage("end state not accepting nor rejecting")
+                simulationLogMessage("-> rejecting input")
+                return false;
+            }
         }
 
 
