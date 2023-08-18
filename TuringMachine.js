@@ -21,11 +21,17 @@ export class TuringMachine{
         this.acceptstate = acceptstate;
         this.rejectstate = rejectstate;
     }
+    
     //runs simulation of input string on turingmachine
     //preconditions: type turingmachine = TuringMachine, fully defined
     //               type input = string
+    //called by userInput.runSimulation()
     runSimulation(input) {
+        //mode switch button
         let stopOnAcceptReject = document.getElementById("modeSwitch").checked === true;
+        console.log(stopOnAcceptReject);
+        
+        // -- core --
         let currentState = this.startstate;
         let i = 0;
         let length = input.length;
@@ -102,8 +108,10 @@ export class TuringMachine{
 
 
     }
+    
     //executes 1 step of a TM simulation (execute transition function)
     //takes state, delta function & current token & returns next state
+    //called by runSimulation()
     transition(state, delta, token){
         //get instruction out of delta-map, should return next State
         let returnState = delta.get(this.getKeyByContent(delta, [state, token]));
@@ -111,28 +119,18 @@ export class TuringMachine{
         return returnState;
     }
 
-    //helper (ensures comparison of array content not of array objects!)
-    getKeyByContent(delta, content){
-        for(const [key, value] of delta){
-            if(JSON.stringify(key) === JSON.stringify(content)){
-                return key;
-            }
-        }
-        return null;
-    }
-
     //creates a new state & adds it to turingmachine (caller)
     //called by userInput.createState()
     createNewState (id, name, isStarting, isAccepting, isRejecting){
-        //check for invalid input
-        // -- TO DO --
         //add state to states list
         let state = new State(id, isStarting, isAccepting, isRejecting)
         this.states.add(state);
         return state;
     
     }
-//helper function that returns corrseponding state when id of state given
+
+// --- Helper Functions ---
+    //given: id -> returns: state with id
     getStateById(id){
         let states = this.states;
         for(const state of states){
@@ -142,12 +140,19 @@ export class TuringMachine{
         }
         return null;
     }
-
-
+    //ensures comparison of array content not of array objects!
+    getKeyByContent(delta, content){
+        for(const [key, value] of delta){
+            if(JSON.stringify(key) === JSON.stringify(content)){
+                return key;
+            }
+        }
+        return null;
+    }
 
 }
 
-//helper functions that add messages to the user screen (creates p element)
+//helper: add messages to the user screen (creates p element)
 function simulationLogMessage(message){
     //get id from HTML
     const logMessagesDiv = document.getElementById("simulationLogMessages");
@@ -159,19 +164,6 @@ function simulationLogMessage(message){
     logMessagesDiv.appendChild(logMessagesElement);
 }
 
-// --- Helper Functions ---
-/*
-//finds state with id = id, returns null if no state with this id exists
-function getStateById(states, id){
-    for(const state of states){
-        if (state.id === id){
-            return state;
-        }
-    }
-    return null;
-}
-*/
-// ---- User Interaction
 
 
 

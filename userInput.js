@@ -1,10 +1,9 @@
 import {TuringMachine} from './TuringMachine.js'
 
 
-//global variables
+// -- global variables
 //TuringMachine
 let turingMachine;
-
 //Form Default Values helper
 //set first StateID to 0
 let stateIdSetter = 0;
@@ -15,7 +14,7 @@ document.getElementById("fromStateId0").value = TransitionSetter;
 document.getElementById("fromStateId1").value = TransitionSetter;
 
 
-//function that is run when page is loaded (also runs on reset())
+//function that is run when page is loaded (=> also run by reset())
 function startTuringMachine(){
     //disable transition
     document.getElementsByName("transitionField").forEach(element => {
@@ -31,32 +30,33 @@ function startTuringMachine(){
 }
 window.addEventListener("load", startTuringMachine);
 
+
+//creates state from user input
 function createState() {
-    // Get the user input from the input fields and radio buttons
+    // Get the user input from the input fields and on/off sliders
     var stateName = document.getElementById("stateName").value;
     var stateId = document.getElementById("stateId").value;
     var isStartingState = document.getElementById("stateStarting").checked === true;
     var isAcceptingState = document.getElementById("stateAccepting").checked === true;
     var isRejectingState = document.getElementById("stateRejecting").checked === true;
-
-    // create State from user input (in TuringMachine.js)
-    let currentState = turingMachine.createNewState(stateId, stateName, isStartingState, isAcceptingState, isRejectingState);
     //catch State not allowed to be Accepting & Rejecting
     if(isAcceptingState&&isRejectingState){
         alert("A state cannot be Accepting & Rejecting at the same time");
         return;
     }
-    
+
+    // create State from user input (in TuringMachine.js)
+    let currentState = turingMachine.createNewState(stateId, stateName, isStartingState, isAcceptingState, isRejectingState);
     // add accepting/rejecting/starting state to turingMachine object
     if(isStartingState){
         turingMachine.startstate=currentState;
-        console.log("starting state set");
-        //disable Starting state radio buttons & set to No
+        
+        //disable Starting state slider & set to off
         document.getElementById("stateStarting").disabled = true;
         document.getElementById("stateStarting").checked = false;
+        //logging
+        console.log("starting state set");
     }
-
-    
     if(isAcceptingState){
         turingMachine.acceptstate=currentState;
         console.log("accepting state set");
@@ -83,8 +83,6 @@ function createState() {
         document.getElementById("createTransitionButton").disabled = false;
         document.getElementById("runSimulationButton").disabled = true;
     }
-
-
     //logging
     console.log("State created: ", stateName, " ", stateId);
     console.log("TM now: ", turingMachine);
@@ -101,12 +99,10 @@ function createState() {
         stateLogMessage(`Accepting State`)
     }
     stateLogMessage("----------")
-
-
 }
 document.getElementById("createStateButton").addEventListener("click", createState);
 
-//create transitions
+//creates tranistion from user input
 //LIMITATION: transition labels are limited to 0 & 1
 function createTransition(){
     //fetch user input
@@ -119,6 +115,8 @@ function createTransition(){
     var toState0 = turingMachine.getStateById(toStateId0);
     var fromState1 = turingMachine.getStateById(fromStateId1);
     var toState1 = turingMachine.getStateById(toStateId1);
+
+
     //add transitions to turingMachine set delta
     turingMachine.delta.set([fromState0, "0"], toState0);
     turingMachine.delta.set([fromState1, "1"], toState1);
@@ -135,10 +133,8 @@ function createTransition(){
             element.disabled = true;
         });
         document.getElementById("createTransitionButton").disabled = true;
-        
         document.getElementById("runSimulationButton").disabled = false;
     }
-
     //logging
     console.log(`0: Transition from ${fromState0} to ${toState0}`);
     console.log(`1: Transition from ${fromState1} to ${toState1}`);
@@ -147,7 +143,6 @@ function createTransition(){
     transitionLogMessage(`0: from ${fromStateId0} to ${toStateId0}`)
     transitionLogMessage(`1: from ${fromStateId1} to ${toStateId1}`)
     transitionLogMessage(`--------`)
-
 }
 document.getElementById("createTransitionButton").addEventListener("click", createTransition);
 
@@ -160,12 +155,13 @@ document.getElementById("deleteStateButton").addEventListener("click", deleteLas
 function deleteLastTransition(){
     //TO DO
 }
-document.getElementById("deleteTransitionButton").addEventListener("click", deleteLastState);
+document.getElementById("deleteTransitionButton").addEventListener("click", deleteLastTransition);
 
 //runSimulation on inputString & alert user on simulation outcome
 function runSimulation(){
     //clear userSimulationLog
     document.getElementById("simulationLogMessages").innerHTML="";
+
     //prevent user from inputting anything else than a bitstring
     var inputString = document.getElementById("inputStringField").value;
     var filteredInput = inputString.replace(/[^01]/g, '');
@@ -183,6 +179,8 @@ function runSimulation(){
 
     //run Simulation
     var simulationResult = turingMachine.runSimulation(inputString);
+
+    //user alert
     if(simulationResult){
         alert("input accepted!")
     }
@@ -194,15 +192,19 @@ document.getElementById("runSimulationButton").addEventListener("click", runSimu
 
 //create default turing machine (no states, alphabet = {0,1})
 function createTuringMachine(){
+    //properties
     let states = new Set();
     let sigma = new Set();
     sigma.add("0");
     sigma.add("1");
     let gamma = new Set(sigma);
     let transitions = new Map();
+
+    //create TM object
     turingMachine = new TuringMachine(states, sigma, gamma, transitions, undefined, undefined, undefined);
+
+    //logging
     console.log("successfully created TM:", turingMachine);
-    //display to user log
     simulationLogMessage("TM Created!")
     simulationLogMessage("-------------------------")
 }
