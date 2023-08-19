@@ -1,5 +1,5 @@
 import {TuringMachine} from './TuringMachine.js'
-import {cytoCreateNode, cytoCreateEdge} from './cytoscape.js';
+import {cytoCreateNode, cytoCreateEdge, cytoRemoveLastNode} from './cytoscape.js';
 
 // -- global variables
 //TuringMachine
@@ -8,6 +8,7 @@ let turingMachine;
 //set first StateID to 0
 let stateIdSetter = 0;
 document.getElementById("stateId").value = stateIdSetter;
+let maxStateId = 50;
 //set first From State to 0
 let TransitionSetter = 0;
 document.getElementById("fromStateId0").value = TransitionSetter;
@@ -48,6 +49,11 @@ function createState() {
         alert("A state cannot be Accepting & Rejecting at the same time");
         return;
     }
+    //limit maxStates
+    if(stateIdSetter > maxStateId){
+        alert(`max limit of states:  ${maxStateId} reached`)
+        return
+    }
 
     // create State from user input (in TuringMachine.js)
     let currentState = turingMachine.createNewState(stateId, stateName, isStartingState, isAcceptingState, isRejectingState);
@@ -66,12 +72,12 @@ function createState() {
     }
     if(isAcceptingState){
         turingMachine.acceptstate=currentState;
-        cytocolor = 'green';
+        cytocolor = '#bfdf56';
         console.log("accepting state set");
     }
     if(isRejectingState){
         turingMachine.rejectstate=currentState;
-        cytocolor = 'red';
+        cytocolor = '#f06060';
         console.log("rejecting state set");
     }
 
@@ -138,8 +144,16 @@ function createTransition(){
     turingMachine.delta.set([fromState0, "0"], toState0);
     turingMachine.delta.set([fromState1, "1"], toState1);
     //cytoscape
-    cytoCreateEdge(edgeId, fromStateId0, toStateId0, 0);
-    cytoCreateEdge(edgeId+1, fromStateId1, toStateId1, 1);
+    
+    if(fromStateId0 == fromStateId1 && toStateId0 == toStateId1){
+        //combined edge if edge 0 == edge 1
+        cytoCreateEdge(edgeId, fromStateId0, toStateId0, "0,1")
+    }
+    else{
+        //seperate edges
+        cytoCreateEdge(edgeId, fromStateId0, toStateId0, 0);
+        cytoCreateEdge(edgeId+1, fromStateId1, toStateId1, 1);
+    }
     edgeId += 2;
 
     //form input helper
@@ -170,14 +184,23 @@ document.getElementById("createTransitionButton").addEventListener("click", crea
 
 //Delete last created State
 function deleteLastState(){
-    //TO DO
+    // TO DO
+    /*
+    //delete in TM object
+    let stateToDelete = turingMachine.getStateById(stateIdSetter-1);
+    turingMachine.states.delete(stateToDelete);
+    //delete any Transitions from/to this state
+
+    //delete node in cyto (also deletes transitions)
+    cytoRemoveLastNode();
+    */
 }
-document.getElementById("deleteStateButton").addEventListener("click", deleteLastState);
+//document.getElementById("deleteStateButton").addEventListener("click", deleteLastState);
 //delete last created transition
 function deleteLastTransition(){
     //TO DO
 }
-document.getElementById("deleteTransitionButton").addEventListener("click", deleteLastTransition);
+//document.getElementById("deleteTransitionButton").addEventListener("click", deleteLastTransition);
 
 //runSimulation on inputString & alert user on simulation outcome
 function runSimulation(){
@@ -204,10 +227,10 @@ function runSimulation(){
 
     //user alert
     if(simulationResult){
-        alert("input accepted!")
+        //alert("input accepted!")
     }
     else{
-        alert("input rejected!")
+        //alert("input rejected!")
     }
 }
 document.getElementById("runSimulationButton").addEventListener("click", runSimulation);
@@ -238,6 +261,7 @@ function reset(){
     location.reload();
 }
 document.getElementById("resetButton").addEventListener("click", reset);
+
 
 
 //helper functions that add messages to the user screen (creates p element)

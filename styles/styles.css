@@ -21,7 +21,7 @@ h1 {
     vertical-align: top;
     align-items: center;
     width: 260px;
-    min-height: 300px;
+    min-height: 250px;
     margin: 1px;
     padding: 0px 5px 0px 5px;
     margin: 22px 0px 0px 0px;
@@ -42,7 +42,7 @@ h1 {
 }
 /* ----- user input boxes */
 div.userInput{
-    height: 300px;
+    height: 280px;
 }
 
 /* ----- Reset Button box ----- */
@@ -262,9 +262,12 @@ input[type="number"]:disabled{
 
 /* ----- CytoScape ----- */
 #cytoscape {
-    width: 100%;
+    width: 80%;
     height: 100%;
     position: absolute;
     top: 400px;
     left: 235px;
+    border: dotted 1px black;
 }
+
+/* ------ overlay ----- */

@@ -1,5 +1,6 @@
 
 import {State} from './State.js';
+import {cy} from './cytoscape.js';
 
 
 // ---- Turingmaschine Prototyp 1
@@ -26,7 +27,7 @@ export class TuringMachine{
     //preconditions: type turingmachine = TuringMachine, fully defined
     //               type input = string
     //called by userInput.runSimulation()
-    runSimulation(input) {
+    async runSimulation(input) {
         //mode switch button
         let stopOnAcceptReject = document.getElementById("modeSwitch").checked === true;
         console.log(stopOnAcceptReject);
@@ -44,6 +45,41 @@ export class TuringMachine{
                     //consume character & execute transition function
                     let currentToken = input.substring(0,1);
                     input = input.substring(1);
+                    
+                    //transition
+                    currentState = this.transition(currentState, this.delta, currentToken);
+                    i++;
+
+                    // animation
+                    let node = cy.getElementById(currentState.id);
+                    //fade in
+                    let originalColor = node.style("background-color");
+                    node.animate(
+                        {
+                            style: {
+                            "background-color": "red",
+                            },
+                        },
+                        {
+                            duration: 1000,
+                        }
+                    );
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    //fade out
+                    node.animate(
+                        {
+                            style: {
+                            "background-color": `${originalColor}`,
+                            },
+                        },
+                        {
+                            duration: 1000,
+                        }
+                    );
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    
+
                     ////debug/logging
                     simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
                     console.log(`   next state if 0: ${this.transition(currentState, this.delta, "0").id}`);
@@ -51,9 +87,6 @@ export class TuringMachine{
                     simulationLogMessage(`   current Token:   ${currentToken}`);
                     simulationLogMessage(`--------`)
                     ////
-                    //transition
-                    currentState = this.transition(currentState, this.delta, currentToken);
-                    i++;
                     
                 }
             if(currentState === this.acceptstate){
@@ -85,8 +118,37 @@ export class TuringMachine{
                     simulationLogMessage(`   current Token:   ${currentToken}`);
                     simulationLogMessage(`--------`)
                     ////
+
+
+                    //animation
+                    let node = cy.getElementById(currentState.id);
+                    //fade in
+                    let originalColor = node.style("background-color");
+                    node.animate(
+                        {
+                            style: {
+                            "background-color": "red",
+                            },
+                        },
+                        {
+                            duration: 1000,
+                        }
+                    );
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    //fade out
+                    node.animate(
+                        {
+                            style: {
+                            "background-color": `${originalColor}`,
+                            },
+                        },
+                        {
+                            duration: 1000,
+                        }
+                    );
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                     //transition
-                    currentState = this.transition(currentState, this.delta, currentToken);
+                    currentState = this.transition(currentState, this.delta, currentToken), 1000;
                     i++;
                     
                 }
@@ -116,6 +178,36 @@ export class TuringMachine{
         //get instruction out of delta-map, should return next State
         let returnState = delta.get(this.getKeyByContent(delta, [state, token]));
 
+        //animation
+        //get id of transition
+        // -- TO DO -- 
+        let edgeId = 100;
+        //do animation
+        let edge = cy.getElementById(edgeId);
+        //fade in
+        edge.animate( 
+            {
+            style: {
+                "background-color": "red",
+            },
+        },
+        {
+            duration: 500,
+        }
+        );
+        //fade out
+        edge.animate( 
+            {
+            style: {
+                "background-color": "darkgrey",
+            },
+            zoom: 1.1,
+        },
+        {
+            duration: 1000,
+        }
+        );
+
         return returnState;
     }
 
@@ -134,7 +226,7 @@ export class TuringMachine{
     getStateById(id){
         let states = this.states;
         for(const state of states){
-            if(state.id === id){
+            if(state.id == id){
                 return state;
             }
         }
@@ -166,7 +258,12 @@ function simulationLogMessage(message){
 
 
 
-
+function sleep(milliseconds) {
+    const startTime = new Date().getTime();
+    while (new Date().getTime() - startTime < milliseconds) {}
+  }
+  
+  sleep(1000); 
 
 
 

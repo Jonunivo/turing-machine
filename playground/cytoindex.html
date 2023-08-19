@@ -21,6 +21,51 @@
 <body>
     <div id="cy"></div>
     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var cy = cytoscape({
+        container: document.getElementById('cy'),
+        elements: [
+          { data: { id: 'a' } },
+          { data: { id: 'b' } },
+          {
+            data: {
+              id: 'ab',
+              source: 'a',
+              target: 'b'
+            }
+          }]
+      });
+
+      // Add a click event listener to nodes
+      cy.nodes().on("click", function (event) {
+        const node = event.target;
+        const newColor = getRandomColor();
+
+        // Animate the change in node color
+        node.animate(
+          {
+            style: {
+              "background-color": newColor,
+            },
+          },
+          {
+            duration: 1000, // Animation duration in milliseconds
+          }
+        );
+      });
+
+      // Function to generate a random color
+      function getRandomColor() {
+        return "#" + Math.floor(Math.random() * 16777215).toString(16);
+      }
+    });
+
+
+
+
+
+
+
       var cy = cytoscape({
         container: document.getElementById('cy'),
         elements: [
@@ -33,6 +78,13 @@
               target: 'b'
             }
           }]
+      });
+      cy.animate({
+        style:{
+          "background-color": "white",
+        },
+      }, {
+        duration: 1000
       });
     </script>
 </body>
