@@ -1,6 +1,6 @@
 
 import {State} from './State.js';
-import {cy} from './cytoscape.js';
+import {cy, animate, edgeAnimation} from './cytoscape.js';
 
 
 // ---- Turingmaschine Prototyp 1
@@ -27,7 +27,7 @@ export class TuringMachine{
     //preconditions: type turingmachine = TuringMachine, fully defined
     //               type input = string
     //called by userInput.runSimulation()
-    async runSimulation(input) {
+async   runSimulation(input) {
         //mode switch button
         let stopOnAcceptReject = document.getElementById("modeSwitch").checked === true;
         console.log(stopOnAcceptReject);
@@ -57,80 +57,9 @@ export class TuringMachine{
                     ////
 
                     ///// animation
-
-                    //simulation speed
-                    let animationTime = 1000/document.getElementById("speedSlider").value;
-
-                    let node = cy.getElementById(currentState.id);
-                    //fade in
-                    let originalColor = node.style("background-color");
-                    node.animate(
-                        {
-                            style: {
-                            "background-color": "red",
-                            },
-                        },
-                        {
-                            duration: animationTime,
-                        }
-                    );
-                    await new Promise(resolve => setTimeout(resolve, animationTime+10));
-                    //fade out
-                    node.animate(
-                        {
-                            style: {
-                            "background-color": `${originalColor}`,
-                            },
-                        },
-                        {
-                            duration: animationTime,
-                        }
-                    );
-                    await new Promise(resolve => setTimeout(resolve, animationTime+10));
-                    
-                    
-                    //edge animation
-                    //get edge
-                    let outgoingEdges = node.outgoers('edge');
-                    let edge 
-                    if(currentToken==0 || outgoingEdges.length === 1){
-                        // 0 or 0,1 edge -> even edge ID
-                        edge=outgoingEdges.find(edge => edge.id() % 2 === 0);
-                    }
-                    else if(currentToken==1){
-                        // 1 edge -> odd edge ID
-                        edge=outgoingEdges.find(edge => edge.id() % 2 === 1);
-                    }
-                    else{
-                        edge=null;
-                    }
-                    if(edge != null){
-                            edge.animate( 
-                            {
-                            style: {
-                                "line-color": "red",
-                            },
-                        },
-                        {
-                            duration: animationTime,
-                        }
-                        );
-                        await new Promise(resolve => setTimeout(resolve, animationTime+10));
-                        edge.animate( 
-                            {
-                            style: {
-                                "line-color": "black",
-                            },
-                        },
-                        {
-                            duration: animationTime,
-                        }
-                        );
-                        await new Promise(resolve => setTimeout(resolve, animationTime+10));
-                    }
-                    /////
-
-                    
+                    //not yet working like intended! TO DO
+                    animate(currentState.id, currentToken);
+                    //edgeAnimation(currentState.id, currentToken);
 
                     //transition
                     currentState = this.transition(currentState, this.delta, currentToken), 1000;
