@@ -1,5 +1,5 @@
 import {TuringMachine} from './TuringMachine.js'
-
+import {cytoCreateNode, cytoCreateEdge} from './cytoscape.js';
 
 // -- global variables
 //TuringMachine
@@ -12,7 +12,8 @@ document.getElementById("stateId").value = stateIdSetter;
 let TransitionSetter = 0;
 document.getElementById("fromStateId0").value = TransitionSetter;
 document.getElementById("fromStateId1").value = TransitionSetter;
-
+//cytoscape TransitionID (!assumes maxID of states = 99! edge ids from 100 onwards)
+let edgeId = 100;
 
 //function that is run when page is loaded (=> also run by reset())
 function startTuringMachine(){
@@ -39,6 +40,9 @@ function createState() {
     var isStartingState = document.getElementById("stateStarting").checked === true;
     var isAcceptingState = document.getElementById("stateAccepting").checked === true;
     var isRejectingState = document.getElementById("stateRejecting").checked === true;
+    //cytoscape variables
+    var cytocolor = 'lightgrey';
+    var cytoborder = false;
     //catch State not allowed to be Accepting & Rejecting
     if(isAcceptingState&&isRejectingState){
         alert("A state cannot be Accepting & Rejecting at the same time");
@@ -51,6 +55,9 @@ function createState() {
     if(isStartingState){
         turingMachine.startstate=currentState;
         
+        //cyto
+        cytocolor = 'darkgrey';
+        cytoborder = 'true';
         //disable Starting state slider & set to off
         document.getElementById("stateStarting").disabled = true;
         document.getElementById("stateStarting").checked = false;
@@ -59,12 +66,17 @@ function createState() {
     }
     if(isAcceptingState){
         turingMachine.acceptstate=currentState;
+        cytocolor = 'green';
         console.log("accepting state set");
     }
     if(isRejectingState){
         turingMachine.rejectstate=currentState;
+        cytocolor = 'red';
         console.log("rejecting state set");
     }
+
+    //cytoscape
+    cytoCreateNode(stateIdSetter, 250, 250, cytocolor, cytoborder);
 
     //form Validation
     //set StateID of next state
@@ -83,10 +95,14 @@ function createState() {
         document.getElementById("createTransitionButton").disabled = false;
         document.getElementById("runSimulationButton").disabled = true;
     }
+
+
+
     //logging
     console.log("State created: ", stateName, " ", stateId);
     console.log("TM now: ", turingMachine);
     //log to user window
+    /*
     stateLogMessage(`State ${stateName}`)
     stateLogMessage(`ID: ${stateId}`)
     if(isStartingState){
@@ -99,6 +115,7 @@ function createState() {
         stateLogMessage(`Accepting State`)
     }
     stateLogMessage("----------")
+    */
 }
 document.getElementById("createStateButton").addEventListener("click", createState);
 
@@ -120,7 +137,10 @@ function createTransition(){
     //add transitions to turingMachine set delta
     turingMachine.delta.set([fromState0, "0"], toState0);
     turingMachine.delta.set([fromState1, "1"], toState1);
-
+    //cytoscape
+    cytoCreateEdge(edgeId, fromStateId0, toStateId0, 0);
+    cytoCreateEdge(edgeId+1, fromStateId1, toStateId1, 1);
+    edgeId += 2;
 
     //form input helper
     //set from state iterating from 0 to stateIdSetter
@@ -139,10 +159,12 @@ function createTransition(){
     console.log(`0: Transition from ${fromState0} to ${toState0}`);
     console.log(`1: Transition from ${fromState1} to ${toState1}`);
     //user log
+    /*
     transitionLogMessage(`Transition created`)
     transitionLogMessage(`0: from ${fromStateId0} to ${toStateId0}`)
     transitionLogMessage(`1: from ${fromStateId1} to ${toStateId1}`)
     transitionLogMessage(`--------`)
+    */
 }
 document.getElementById("createTransitionButton").addEventListener("click", createTransition);
 

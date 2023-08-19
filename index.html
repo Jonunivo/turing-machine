@@ -16,7 +16,7 @@
     </head>
 
     <body>
-        <h1 id="head-title">TuringMachine Version 1.1</h1>
+        <h1 id="head-title">TuringMachine Version 1.2</h1>
 
        
         <div id="leftBox">
@@ -111,15 +111,22 @@
             <div id="transitionLogMessages" class="logMessages"></div>
             
         </div>
+        <div id="cytoscape"></div>
 
 
 
         <!--- links to the scripts -->
-        <script src="./Playground.js"></script>
+        <script src="./playground/Playground.js"></script>
+        
+        <!-- cytoscope -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js" integrity="sha512-rOsRHy2O7kykGotH99Bi0+LyynL6rfQpaMiKOwYa1K1jYAFksJUwXE1gE6Relgo88g6lQ/uf8NaWeyzi1T53Zg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <!-- <script type="module" src="./playground/cytoscapePlayground.js"></script> -->
+        <script type="module" src="./cytoscape.js"></script>
 
         <script type="module" src="./State.js" ></script>
         <script type="module" src="./TuringMachine.js" ></script>
         <script type="module" src="./userInput.js" ></script>
+        
 
     </body>
 

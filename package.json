@@ -16,6 +16,8 @@
     "url": "https://github.com/Jonunivo/turing-machine/issues"
   },
   "homepage": "https://github.com/Jonunivo/turing-machine#readme",
-
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "cytoscape": "^3.26.0"
+  }
 }
