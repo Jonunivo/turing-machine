@@ -150,7 +150,7 @@ function createTransition(){
         cytoCreateEdge(edgeId, fromStateId0, toStateId0, "0,1")
     }
     else{
-        //seperate edges
+        //seperate edges (even for 0 edges, odd for 1 edges)
         cytoCreateEdge(edgeId, fromStateId0, toStateId0, 0);
         cytoCreateEdge(edgeId+1, fromStateId1, toStateId1, 1);
     }

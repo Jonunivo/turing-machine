@@ -32,6 +32,7 @@ export class TuringMachine{
         let stopOnAcceptReject = document.getElementById("modeSwitch").checked === true;
         console.log(stopOnAcceptReject);
         
+        
         // -- core --
         let currentState = this.startstate;
         let i = 0;
@@ -42,15 +43,24 @@ export class TuringMachine{
             while(currentState !== this.acceptstate &&
                 currentState !== this.rejectstate &&
                 i<length){
-                    //consume character & execute transition function
+
+                    // --- Consume Token
                     let currentToken = input.substring(0,1);
                     input = input.substring(1);
                     
-                    //transition
-                    currentState = this.transition(currentState, this.delta, currentToken);
-                    i++;
+                    ////debug/logging
+                    simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
+                    console.log(`   next state if 0: ${this.transition(currentState, this.delta, "0").id}`);
+                    console.log(`   next state if 1: ${this.transition(currentState, this.delta, "1").id}`);
+                    simulationLogMessage(`   current Token:   ${currentToken}`);
+                    simulationLogMessage(`--------`)
+                    ////
 
-                    // animation
+                    ///// animation
+
+                    //simulation speed
+                    let animationTime = 1000/document.getElementById("speedSlider").value;
+
                     let node = cy.getElementById(currentState.id);
                     //fade in
                     let originalColor = node.style("background-color");
@@ -61,10 +71,10 @@ export class TuringMachine{
                             },
                         },
                         {
-                            duration: 1000,
+                            duration: animationTime,
                         }
                     );
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await new Promise(resolve => setTimeout(resolve, animationTime+10));
                     //fade out
                     node.animate(
                         {
@@ -73,20 +83,58 @@ export class TuringMachine{
                             },
                         },
                         {
-                            duration: 1000,
+                            duration: animationTime,
                         }
                     );
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await new Promise(resolve => setTimeout(resolve, animationTime+10));
+                    
+                    
+                    //edge animation
+                    //get edge
+                    let outgoingEdges = node.outgoers('edge');
+                    let edge 
+                    if(currentToken==0 || outgoingEdges.length === 1){
+                        // 0 or 0,1 edge -> even edge ID
+                        edge=outgoingEdges.find(edge => edge.id() % 2 === 0);
+                    }
+                    else if(currentToken==1){
+                        // 1 edge -> odd edge ID
+                        edge=outgoingEdges.find(edge => edge.id() % 2 === 1);
+                    }
+                    else{
+                        edge=null;
+                    }
+                    if(edge != null){
+                            edge.animate( 
+                            {
+                            style: {
+                                "line-color": "red",
+                            },
+                        },
+                        {
+                            duration: animationTime,
+                        }
+                        );
+                        await new Promise(resolve => setTimeout(resolve, animationTime+10));
+                        edge.animate( 
+                            {
+                            style: {
+                                "line-color": "black",
+                            },
+                        },
+                        {
+                            duration: animationTime,
+                        }
+                        );
+                        await new Promise(resolve => setTimeout(resolve, animationTime+10));
+                    }
+                    /////
 
                     
 
-                    ////debug/logging
-                    simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
-                    console.log(`   next state if 0: ${this.transition(currentState, this.delta, "0").id}`);
-                    console.log(`   next state if 1: ${this.transition(currentState, this.delta, "1").id}`);
-                    simulationLogMessage(`   current Token:   ${currentToken}`);
-                    simulationLogMessage(`--------`)
-                    ////
+                    //transition
+                    currentState = this.transition(currentState, this.delta, currentToken), 1000;
+                    i++;
                     
                 }
             if(currentState === this.acceptstate){
@@ -111,6 +159,7 @@ export class TuringMachine{
                     //consume character & execute transition function
                     let currentToken = input.substring(0,1);
                     input = input.substring(1);
+                    
                     ////debug/logging
                     simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
                     console.log(`   next state if 0: ${this.transition(currentState, this.delta, "0").id}`);
@@ -119,8 +168,10 @@ export class TuringMachine{
                     simulationLogMessage(`--------`)
                     ////
 
-
-                    //animation
+                    /////animation
+                    //simulation speed
+                    let animationTime = 1000/document.getElementById("speedSlider").value;
+                    
                     let node = cy.getElementById(currentState.id);
                     //fade in
                     let originalColor = node.style("background-color");
@@ -131,10 +182,10 @@ export class TuringMachine{
                             },
                         },
                         {
-                            duration: 1000,
+                            duration: animationTime,
                         }
                     );
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await new Promise(resolve => setTimeout(resolve, animationTime+10));
                     //fade out
                     node.animate(
                         {
@@ -143,10 +194,53 @@ export class TuringMachine{
                             },
                         },
                         {
-                            duration: 1000,
+                            duration: animationTime,
                         }
                     );
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await new Promise(resolve => setTimeout(resolve, animationTime+10));
+                    //edge animation
+                    //get edge
+                    let outgoingEdges = node.outgoers('edge');
+                    let edge 
+                    if(currentToken==0 || outgoingEdges.length === 1){
+                        // 0 or 0,1 edge -> even edge ID
+                        edge=outgoingEdges.find(edge => edge.id() % 2 === 0);
+                    }
+                    else if(currentToken==1){
+                        // 1 edge -> odd edge ID
+                        edge=outgoingEdges.find(edge => edge.id() % 2 === 1);
+                    }
+                    else{
+                        edge=null;
+                    }
+                    if(edge != null){
+                            edge.animate( 
+                            {
+                            style: {
+                                "line-color": "red",
+                            },
+                        },
+                        {
+                            duration: animationTime,
+                        }
+                        );
+                        await new Promise(resolve => setTimeout(resolve, animationTime+10));
+                        edge.animate( 
+                            {
+                            style: {
+                                "line-color": "black",
+                            },
+                        },
+                        {
+                            duration: animationTime,
+                        }
+                        );
+                        await new Promise(resolve => setTimeout(resolve, animationTime+10));
+                    }
+                    /////
+                    
+
+                    
                     //transition
                     currentState = this.transition(currentState, this.delta, currentToken), 1000;
                     i++;
@@ -177,25 +271,29 @@ export class TuringMachine{
     transition(state, delta, token){
         //get instruction out of delta-map, should return next State
         let returnState = delta.get(this.getKeyByContent(delta, [state, token]));
+        //simulation speed
+        let animationTime = 1000/document.getElementById("speedSlider").value;
 
         //animation
         //get id of transition
         // -- TO DO -- 
         let edgeId = 100;
         //do animation
-        let edge = cy.getElementById(edgeId);
+        let edge = cy.edges(edgeId);
+        console.log(edge);
         //fade in
         edge.animate( 
             {
             style: {
-                "background-color": "red",
+                "line-color": "red",
             },
         },
         {
-            duration: 500,
+            duration: 1,
         }
         );
-        //fade out
+        //await new Promise(resolve => setTimeout(resolve, animationTime+10));
+        /* fade out
         edge.animate( 
             {
             style: {
@@ -206,7 +304,7 @@ export class TuringMachine{
         {
             duration: 1000,
         }
-        );
+        ); */
 
         return returnState;
     }
@@ -258,12 +356,14 @@ function simulationLogMessage(message){
 
 
 
-function sleep(milliseconds) {
-    const startTime = new Date().getTime();
-    while (new Date().getTime() - startTime < milliseconds) {}
+function busyWait(milliseconds) {
+    const endTime = Date.now() + milliseconds; // Calculate the end time in milliseconds
+
+    while (Date.now() < endTime) {
+        // Busy loop until the desired time has passed
+    }
   }
   
-  sleep(1000); 
 
 
 
