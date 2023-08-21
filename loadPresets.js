@@ -75,7 +75,7 @@ function empty(){
 var options = document.querySelectorAll("#presetSelect option");
 var presetSelect = document.getElementById("presetSelect");
     
-presetSelect.addEventListener("click", function() {
+presetSelect.addEventListener("change", function() {
         
         if (presetSelect.value === "empty") {
             empty();
