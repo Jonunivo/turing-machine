@@ -51,13 +51,13 @@ window.addEventListener("load", startTuringMachine);
 //read State Inputs from User
 function userCreateState() {
     // Get the user input from the input fields and on/off sliders
-    var stateName = document.getElementById("stateName").value;
+    //var stateName = document.getElementById("stateName").value;
     var stateId = document.getElementById("stateId").value;
     var isStartingState = document.getElementById("stateStarting").checked === true;
     var isAcceptingState = document.getElementById("stateAccepting").checked === true;
     var isRejectingState = document.getElementById("stateRejecting").checked === true;
 
-    createState(stateName, stateId, isStartingState, isAcceptingState, isRejectingState);
+    createState(undefined, stateId, isStartingState, isAcceptingState, isRejectingState);
     
 }
 document.getElementById("createStateButton").addEventListener("click", userCreateState);

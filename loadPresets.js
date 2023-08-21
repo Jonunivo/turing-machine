@@ -73,22 +73,21 @@ function empty(){
 
 //event listeners 
 var options = document.querySelectorAll("#presetSelect option");
-
-options.forEach(function(option) {
-    option.addEventListener("click", function() {
+var presetSelect = document.getElementById("presetSelect");
+    
+presetSelect.addEventListener("click", function() {
         
-        if (option.value === "empty") {
+        if (presetSelect.value === "empty") {
             empty();
             console.log("empty clicked");
         }
-        else if (option.value === "PresetOne") {
+        else if (presetSelect.value === "PresetOne") {
             loadPreset1();
             console.log("PresetOne clicked");
         } 
-        else if (option.value === "PresetTwo") {
+        else if (presetSelect.value === "PresetTwo") {
             loadPreset2();
             console.log("PresetTwo clicked");
         } 
         // Add more conditions for other options as needed
     });
-});
