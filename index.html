@@ -24,6 +24,14 @@
             <div id="resetButtonDiv">
                 <button id="resetButton" class="button">Reset</button>
             </div>
+            <!-- Load Presets -->
+            <div id="choosePreset" class="optionMenu">
+                <select id="presetSelect" name="preset">
+                    <option value="empty" selected>No Preset</option>
+                    <option value="PresetOne">Preset 1</option>
+                    <option value="PresetTwo">Preset 2</option>
+                </select>
+            </div>
 
 
             <!--- Input String -->
@@ -31,26 +39,25 @@
                 <label for="inputStringField">Input String: </label>
                 <input type="text" id="inputStringField" required>
                 <br>
-                <button id="runSimulationButton" class="button" disabled>Run Simulation</button>
-                <input type="checkbox" id="modeSwitch"required>
-                <label class="checkboxLabel" for="modeSwitch">Mode</label>
+
             </div>
 
             <!--- Simulation Speed -->
             <div id="simulationSpeed">
-                <input type="range" min="1" max="4" value="2" class="slider" id="speedSlider">
+                <input type="range" min="1" max="4" step=0.01 value="2" class="slider" id="speedSlider">
                 <label for="speedSlider">Simulation Speed</label>
             </div>
-            <br>
 
-            <!-- Load Presets -->
-            <div id="choosePreset">
-                <select id="presetSelect" name="preset">
-                    <option value="empty" selected></option>
-                    <option value="PresetOne">Preset 1</option>
-                    <option value="PresetTwo">Preset 2</option>
-                </select>
+            <!-- mode switch-->
+            <div id="modeSwitchDiv">
+                <input type="checkbox" id="modeSwitch"required>
+                <label class="checkboxLabel" for="modeSwitch">Mode</label>
             </div>
+            <!-- Run Simulation-->
+            <div id="runSimulationButtonDiv">
+                <button id="runSimulationButton" class="button" disabled>Run Simulation</button>
+            </div>
+
 
             <!---simulation log messages-->
             <div id="simulationLogMessages" class="logMessages"></div>
