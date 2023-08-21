@@ -1,5 +1,7 @@
 import {TuringMachine} from './TuringMachine.js'
 import {cytoCreateNode, cytoCreateEdge, cytoRemoveLastNode} from './cytoscape.js';
+//export
+export{createState, createTransition, cytoTransitionHelper, startTuringMachine}
 
 // -- global variables
 //TuringMachine
@@ -7,43 +9,64 @@ let turingMachine;
 //Form Default Values helper
 //set first StateID to 0
 let stateIdSetter = 0;
-document.getElementById("stateId").value = stateIdSetter;
 let maxStateId = 50;
 //set first From State to 0
 let TransitionSetter = 0;
-document.getElementById("fromStateId0").value = TransitionSetter;
-document.getElementById("fromStateId1").value = TransitionSetter;
 //cytoscape TransitionID (!assumes maxID of states = 99! edge ids from 100 onwards)
 let edgeId = 100;
 
 //function that is run when page is loaded (=> also run by reset())
 function startTuringMachine(){
+    //(re-)set globals to starting value
+    stateIdSetter = 0;
+    document.getElementById("stateId").value = 0;
+    TransitionSetter = 0;
+    edgeId = 100;
+
+    //FORM RESET
+    //disable run simulation
+    document.getElementById("inputStringField").value = "";
+    document.getElementById("runSimulationButton").disabled = true;
+    //reactivate State sliders
+    document.getElementById("stateStarting").disabled = false;
+    document.getElementById("stateAccepting").disabled = false;
+    document.getElementById("stateRejecting").disabled = false;
     //disable transition
     document.getElementsByName("transitionField").forEach(element => {
         element.value = 0;
         element.disabled = true;
     });
     document.getElementById("createTransitionButton").disabled= true;
-    //disable run simulation
-    document.getElementById("inputStringField").value = "";
-    document.getElementById("runSimulationButton").disabled = true;
+
     //turing Machine initialized
+    
+
+
+    //create TM object
     createTuringMachine();
 }
 window.addEventListener("load", startTuringMachine);
 
 
-//creates state from user input
-function createState() {
+//read State Inputs from User
+function userCreateState() {
     // Get the user input from the input fields and on/off sliders
     var stateName = document.getElementById("stateName").value;
     var stateId = document.getElementById("stateId").value;
     var isStartingState = document.getElementById("stateStarting").checked === true;
     var isAcceptingState = document.getElementById("stateAccepting").checked === true;
     var isRejectingState = document.getElementById("stateRejecting").checked === true;
-    //cytoscape variables
+
+    createState(stateName, stateId, isStartingState, isAcceptingState, isRejectingState);
+    
+}
+document.getElementById("createStateButton").addEventListener("click", userCreateState);
+//actually create state
+function createState(stateName, stateId, isStartingState, isAcceptingState, isRejectingState){
+    //cyto default values
     var cytocolor = 'lightgrey';
     var cytoborder = false;
+    
     //catch State not allowed to be Accepting & Rejecting
     if(isAcceptingState&&isRejectingState){
         alert("A state cannot be Accepting & Rejecting at the same time");
@@ -60,7 +83,6 @@ function createState() {
     // add accepting/rejecting/starting state to turingMachine object
     if(isStartingState){
         turingMachine.startstate=currentState;
-        
         //cyto
         cytocolor = 'darkgrey';
         cytoborder = 'true';
@@ -73,11 +95,19 @@ function createState() {
     if(isAcceptingState){
         turingMachine.acceptstate=currentState;
         cytocolor = '#bfdf56';
+        //disable Starting state slider & set to off
+        document.getElementById("stateAccepting").disabled = true;
+        document.getElementById("stateAccepting").checked = false;
+        //logging
         console.log("accepting state set");
     }
     if(isRejectingState){
         turingMachine.rejectstate=currentState;
         cytocolor = '#f06060';
+        //disable Starting state slider & set to off
+        document.getElementById("stateRejecting").disabled = true;
+        document.getElementById("stateRejecting").checked = false;
+        //logging
         console.log("rejecting state set");
     }
 
@@ -102,8 +132,6 @@ function createState() {
         document.getElementById("runSimulationButton").disabled = true;
     }
 
-
-
     //logging
     console.log("State created: ", stateName, " ", stateId);
     console.log("TM now: ", turingMachine);
@@ -123,42 +151,66 @@ function createState() {
     stateLogMessage("----------")
     */
 }
-document.getElementById("createStateButton").addEventListener("click", createState);
 
-//creates tranistion from user input
+
+
+//read Transition inputs from user
 //LIMITATION: transition labels are limited to 0 & 1
-function createTransition(){
+function userCreateTransition(){
     //fetch user input
     var fromStateId0 = document.getElementById("fromStateId0").value;
     var toStateId0 = document.getElementById("toStateId0").value;
     var fromStateId1 = document.getElementById("fromStateId1").value;
     var toStateId1 = document.getElementById("toStateId1").value;
+
+    //create transition in TM
+    createTransition(fromStateId0, toStateId0, "0");
+    createTransition(fromStateId1, toStateId1, "1");
+    //cytoscope creation
+    cytoTransitionHelper(fromStateId0, toStateId0, fromStateId1, toStateId1);
+
+}
+document.getElementById("createTransitionButton").addEventListener("click", userCreateTransition);
+//actually create Transition
+function createTransition(fromStateId, toStateId, label){
     //get corresponding states from IDs
-    var fromState0 = turingMachine.getStateById(fromStateId0);
-    var toState0 = turingMachine.getStateById(toStateId0);
-    var fromState1 = turingMachine.getStateById(fromStateId1);
-    var toState1 = turingMachine.getStateById(toStateId1);
-
-
+    var fromState = turingMachine.getStateById(fromStateId);
+    var toState = turingMachine.getStateById(toStateId);
     //add transitions to turingMachine set delta
-    turingMachine.delta.set([fromState0, "0"], toState0);
-    turingMachine.delta.set([fromState1, "1"], toState1);
-    //cytoscape
+    turingMachine.createNewTransition(fromState, toState, label);
     
-    if(fromStateId0 == fromStateId1 && toStateId0 == toStateId1){
+
+    //formhelper
+    transitionFormHelper();
+
+    //logging
+    console.log(`0: Transition from ${fromState} to ${toState}`);
+    console.log(`1: Transition from ${fromState} to ${toState}`);
+    //user log
+    /*
+    transitionLogMessage(`Transition created`)
+    transitionLogMessage(`0: from ${fromStateId0} to ${toStateId0}`)
+    transitionLogMessage(`1: from ${fromStateId1} to ${toStateId1}`)
+    transitionLogMessage(`--------`)
+    */
+}
+//create cytoscape edges
+function cytoTransitionHelper(fromStateId0, toStateId0, fromStateId1, toStateId1){
+    if(fromStateId0 == fromStateId0 && toStateId0 == toStateId1){
         //combined edge if edge 0 == edge 1
         cytoCreateEdge(edgeId, fromStateId0, toStateId0, "0,1")
     }
     else{
-        //seperate edges (even for 0 edges, odd for 1 edges)
+        //seperate edges (even Id for 0 edges, odd Id for 1 edges)
         cytoCreateEdge(edgeId, fromStateId0, toStateId0, 0);
         cytoCreateEdge(edgeId+1, fromStateId1, toStateId1, 1);
     }
     edgeId += 2;
-
-    //form input helper
+}
+//form input helper
+function transitionFormHelper(){
     //set from state iterating from 0 to stateIdSetter
-    TransitionSetter++;
+    TransitionSetter+=0.5;
     document.getElementById("fromStateId0").value = TransitionSetter;
     document.getElementById("fromStateId1").value = TransitionSetter;
     //lock input when all fromIDs done
@@ -169,18 +221,7 @@ function createTransition(){
         document.getElementById("createTransitionButton").disabled = true;
         document.getElementById("runSimulationButton").disabled = false;
     }
-    //logging
-    console.log(`0: Transition from ${fromState0} to ${toState0}`);
-    console.log(`1: Transition from ${fromState1} to ${toState1}`);
-    //user log
-    /*
-    transitionLogMessage(`Transition created`)
-    transitionLogMessage(`0: from ${fromStateId0} to ${toStateId0}`)
-    transitionLogMessage(`1: from ${fromStateId1} to ${toStateId1}`)
-    transitionLogMessage(`--------`)
-    */
 }
-document.getElementById("createTransitionButton").addEventListener("click", createTransition);
 
 //Delete last created State
 function deleteLastState(){
@@ -222,6 +263,10 @@ function runSimulation(){
         return;
     }
 
+    //disable Run Simulation button until end of Simulation
+    document.getElementById("runSimulationButton").disabled = true;
+    document.getElementById("runSimulationButton").innerHTML = "Simulation Running"
+
     //run Simulation
     var simulationResult = turingMachine.runSimulation(inputString);
 
@@ -232,6 +277,10 @@ function runSimulation(){
     else{
         //alert("input rejected!")
     }
+
+    //re-enable Run Simulation button
+    //done in turingMachine.runSimulation in TuringMachine.js
+
 }
 document.getElementById("runSimulationButton").addEventListener("click", runSimulation);
 
@@ -250,8 +299,6 @@ function createTuringMachine(){
 
     //logging
     console.log("successfully created TM:", turingMachine);
-    simulationLogMessage("TM Created!")
-    simulationLogMessage("-------------------------")
 }
 //document.getElementById("createTMButton").addEventListener("click", createTuringMachine);
 
@@ -275,6 +322,9 @@ function simulationLogMessage(message){
     logMessagesElement.textContent = message;
     logMessagesDiv.appendChild(logMessagesElement);
 }
+
+
+//not used anymore (since cytoscape)
 function stateLogMessage(message){
     //get id from HTML
     const logMessagesDiv = document.getElementById("stateLogMessages");
@@ -285,6 +335,7 @@ function stateLogMessage(message){
     logMessagesElement.textContent = message;
     logMessagesDiv.appendChild(logMessagesElement);
 }
+//not used anymore (since cytoscape)
 function transitionLogMessage(message){
     //get id from HTML
     const logMessagesDiv = document.getElementById("transitionLogMessages");
@@ -296,6 +347,4 @@ function transitionLogMessage(message){
     logMessagesDiv.appendChild(logMessagesElement);
 }
 
-
-//debug helper
 

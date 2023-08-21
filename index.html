@@ -43,6 +43,15 @@
             </div>
             <br>
 
+            <!-- Load Presets -->
+            <div id="choosePreset">
+                <select id="presetSelect" name="preset">
+                    <option value="empty" selected></option>
+                    <option value="PresetOne">Preset 1</option>
+                    <option value="PresetTwo">Preset 2</option>
+                </select>
+            </div>
+
             <!---simulation log messages-->
             <div id="simulationLogMessages" class="logMessages"></div>
         </div>
@@ -51,10 +60,12 @@
                 <!--- Create User State -->
             <div id="stateInput" class="userInput">
                 <!-- Add form elements for user input -->
+                <!--
                 <div class="textFieldDiv">
                     <label for="stateName" class="textLabel">State Name:</label>
                     <input type="text" id="stateName" required>
                 </div>
+                -->
                 <div class="stateIdDiv" id="stateIdState">
                     <label class="stateIdLabel" for="stateId">State ID:</label>
                     <input type="number" id="stateId" min="0" max="1000" readonly disabled>
@@ -128,9 +139,13 @@
         <!-- <script type="module" src="./playground/cytoscapePlayground.js"></script> -->
         <script type="module" src="./cytoscape.js"></script>
 
+
+
         <script type="module" src="./State.js" ></script>
         <script type="module" src="./TuringMachine.js" ></script>
         <script type="module" src="./userInput.js" ></script>
+
+        <script type="module" src="./loadPresets.js"></script>
         
 
     </body>

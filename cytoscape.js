@@ -1,8 +1,6 @@
 import cytoscape from './node_modules/cytoscape/dist/cytoscape.esm.min.js';
+export {cy, cytoCreateNode, cytoCreateEdge, cytoRemoveLastNode, animateNode, animateEdge, clearCanvas};
 
-
-//global var: isanimation complete?
-let isComplete = true;
 
 //cytoscape object
 var cy = cytoscape({
@@ -103,15 +101,10 @@ function cytoRemoveLastNode(){
 
 
 //not yet working like intended!! TO DO
-async function animate(nodeId, token){
-    //wait
-    //simulation speed
-    let animationTime = 1000/document.getElementById("speedSlider").value;
-
+function animateNode(nodeId, animationTime){
     let node = cy.getElementById(nodeId);
     //fade in
     let originalColor = node.style("background-color");
-    isComplete=false;
     node.animate(
         {
             style: {
@@ -120,6 +113,7 @@ async function animate(nodeId, token){
         },
         {
             duration: animationTime,
+            //fade out
             complete: function(){
                 node.animate(
                     {
@@ -131,22 +125,20 @@ async function animate(nodeId, token){
                         duration: animationTime,
                         complete: function(){
                             console.log("nodeAnimation complete")
-                            edgeAnimation(nodeId, token)
-                            isComplete = true;
                         }
                     }
                 );
             }
         }
     );
-    await new Promise(resolve => setTimeout(resolve, 4*animationTime+10));
-    //fade out
+    
 }
 
-function edgeAnimation(nodeId, token){
+
+
+function animateEdge(nodeId, token, animationTime){
     //edge animation
     //get edge
-    let animationTime = 1000/document.getElementById("speedSlider").value;
     let node = cy.getElementById(nodeId);
     let outgoingEdges = node.outgoers('edge');
     let edge 
@@ -162,36 +154,41 @@ function edgeAnimation(nodeId, token){
         edge=null;
     }
     if(edge != null){
-            edge.animate( 
-            {
-            style: {
-                "line-color": "red",
-            },
+        let originalColor = edge.style("background-color");
+        edge.animate( 
+        {
+        style: {
+            "line-color": "red",
+        },
         },
         {
-            duration: animationTime,
-            complete: function(){
-                edge.animate( 
-                    {
-                    style: {
-                        "line-color": "black",
-                    },
-                },
+        duration: animationTime,
+        complete: function(){
+            edge.animate( 
                 {
-                    duration: animationTime,
-                    complete: function(){
-                        isComplete=true;
-                        console.log("edge animation complete")
-                    }
+                style: {
+                    "line-color": `${originalColor}`,
+                },
+            },
+            {
+                duration: animationTime,
+                complete: function(){
+                    console.log("edge animation complete")
                 }
-                );
             }
+            );
+        }
         }
         );
         
     }
 }
 
+
+function clearCanvas(){
+    var toBeRemoved = cy.nodes();
+    toBeRemoved.remove();
+}
 //move nodes back into field if dragged out of it
 // https://stackoverflow.com/questions/39280268/disable-dragging-nodes-outside-of-area-in-cytoscape-js
 cy.on('mouseup', function (e) {
@@ -207,4 +204,3 @@ cy.on('mouseup', function (e) {
 })
 
 
-export {cy, cytoCreateNode, cytoCreateEdge, cytoRemoveLastNode, animate, edgeAnimation}

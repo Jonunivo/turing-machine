@@ -1,6 +1,6 @@
 
 import {State} from './State.js';
-import {cy, animate, edgeAnimation} from './cytoscape.js';
+import {cy, animateNode, animateEdge} from './cytoscape.js';
 
 
 // ---- Turingmaschine Prototyp 1
@@ -27,7 +27,7 @@ export class TuringMachine{
     //preconditions: type turingmachine = TuringMachine, fully defined
     //               type input = string
     //called by userInput.runSimulation()
-async   runSimulation(input) {
+    async runSimulation(input) {
         //mode switch button
         let stopOnAcceptReject = document.getElementById("modeSwitch").checked === true;
         console.log(stopOnAcceptReject);
@@ -57,29 +57,18 @@ async   runSimulation(input) {
                     ////
 
                     ///// animation
-                    //not yet working like intended! TO DO
-                    animate(currentState.id, currentToken);
-                    //edgeAnimation(currentState.id, currentToken);
+                    let animationTime = 1000/document.getElementById("speedSlider").value;
+                    animateNode(currentState.id, animationTime);
+                    await new Promise(resolve => setTimeout(resolve, 1.5*animationTime+10));
+                    animateEdge(currentState.id, currentToken, animationTime);
+                    await new Promise(resolve => setTimeout(resolve, 2*animationTime+10));
+                    ////
 
                     //transition
                     currentState = this.transition(currentState, this.delta, currentToken), 1000;
                     i++;
                     
-                }
-            if(currentState === this.acceptstate){
-                simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
-                simulationLogMessage("--- accept state reached! ---");
-                return true;
-            }
-            else if(currentState === this.rejectstate){
-                simulationLogMessage("--- reject state reached! ---")
-                return false;
-            }
-            else{
-                simulationLogMessage("end of string reached, missed accept/reject state")
-                simulationLogMessage("-> rejecting input")
-                return false;
-            }
+                } 
         }
         
         //mode : continue until end of string
@@ -97,101 +86,21 @@ async   runSimulation(input) {
                     simulationLogMessage(`--------`)
                     ////
 
-                    /////animation
-                    //simulation speed
+                    ///// animation
                     let animationTime = 1000/document.getElementById("speedSlider").value;
-                    
-                    let node = cy.getElementById(currentState.id);
-                    //fade in
-                    let originalColor = node.style("background-color");
-                    node.animate(
-                        {
-                            style: {
-                            "background-color": "red",
-                            },
-                        },
-                        {
-                            duration: animationTime,
-                        }
-                    );
-                    await new Promise(resolve => setTimeout(resolve, animationTime+10));
-                    //fade out
-                    node.animate(
-                        {
-                            style: {
-                            "background-color": `${originalColor}`,
-                            },
-                        },
-                        {
-                            duration: animationTime,
-                        }
-                    );
-                    await new Promise(resolve => setTimeout(resolve, animationTime+10));
-                    //edge animation
-                    //get edge
-                    let outgoingEdges = node.outgoers('edge');
-                    let edge 
-                    if(currentToken==0 || outgoingEdges.length === 1){
-                        // 0 or 0,1 edge -> even edge ID
-                        edge=outgoingEdges.find(edge => edge.id() % 2 === 0);
-                    }
-                    else if(currentToken==1){
-                        // 1 edge -> odd edge ID
-                        edge=outgoingEdges.find(edge => edge.id() % 2 === 1);
-                    }
-                    else{
-                        edge=null;
-                    }
-                    if(edge != null){
-                            edge.animate( 
-                            {
-                            style: {
-                                "line-color": "red",
-                            },
-                        },
-                        {
-                            duration: animationTime,
-                        }
-                        );
-                        await new Promise(resolve => setTimeout(resolve, animationTime+10));
-                        edge.animate( 
-                            {
-                            style: {
-                                "line-color": "black",
-                            },
-                        },
-                        {
-                            duration: animationTime,
-                        }
-                        );
-                        await new Promise(resolve => setTimeout(resolve, animationTime+10));
-                    }
-                    /////
-                    
+                    animateNode(currentState.id, animationTime);
+                    await new Promise(resolve => setTimeout(resolve, 1.5*animationTime+10));
+                    animateEdge(currentState.id, currentToken, animationTime);
+                    await new Promise(resolve => setTimeout(resolve, 2*animationTime+10));
+                    ////
 
-                    
                     //transition
                     currentState = this.transition(currentState, this.delta, currentToken), 1000;
                     i++;
-                    
                 }
-            if(currentState === this.acceptstate){
-                simulationLogMessage(`currently at State ${currentState.id}, accepting? ${currentState.isAccepting}`);
-                simulationLogMessage("--- end state accepting! ---");
-                return true;
-            }
-            else if(currentState === this.rejectstate){
-                simulationLogMessage("--- end state rejecting! ---")
-                return false;
-            }
-            else{
-                simulationLogMessage("end state not accepting nor rejecting")
-                simulationLogMessage("-> rejecting input")
-                return false;
-            }
         }
-
-
+        //finalize simulation & return result
+        return this.simulationResult(currentState);
     }
     
     //executes 1 step of a TM simulation (execute transition function)
@@ -200,42 +109,38 @@ async   runSimulation(input) {
     transition(state, delta, token){
         //get instruction out of delta-map, should return next State
         let returnState = delta.get(this.getKeyByContent(delta, [state, token]));
-        //simulation speed
-        let animationTime = 1000/document.getElementById("speedSlider").value;
-
-        //animation
-        //get id of transition
-        // -- TO DO -- 
-        let edgeId = 100;
-        //do animation
-        let edge = cy.edges(edgeId);
-        console.log(edge);
-        //fade in
-        edge.animate( 
-            {
-            style: {
-                "line-color": "red",
-            },
-        },
-        {
-            duration: 1,
-        }
-        );
-        //await new Promise(resolve => setTimeout(resolve, animationTime+10));
-        /* fade out
-        edge.animate( 
-            {
-            style: {
-                "background-color": "darkgrey",
-            },
-            zoom: 1.1,
-        },
-        {
-            duration: 1000,
-        }
-        ); */
-
         return returnState;
+    }
+    
+
+    //handles everything after simulation reached final state
+    simulationResult(finalState){
+
+        let result = false;
+
+        //user logging
+        simulationLogMessage(`currently at State ${finalState.id}, accepting? ${finalState.isAccepting}`);
+        //last state Accepting
+        if(finalState === this.acceptstate){
+            simulationLogMessage("--- Last State Accepting ---");
+            result = true;
+        }
+        else if(finalState === this.rejectstate){
+            simulationLogMessage("--- Last State Rejecting ---")
+        }
+        else{
+            simulationLogMessage("end of string reached, missed accept/reject state")
+            simulationLogMessage("-> rejecting input")
+        }
+        //final node animation
+        let animationTime = 1000/document.getElementById("speedSlider").value;
+        animateNode(finalState.id, animationTime);
+        //reenable run simulation button
+        document.getElementById("runSimulationButton").disabled = false;
+        document.getElementById("runSimulationButton").innerHTML = "Run Simulation"
+        
+        //return simulation result
+        return result
     }
 
     //creates a new state & adds it to turingmachine (caller)
@@ -246,6 +151,12 @@ async   runSimulation(input) {
         this.states.add(state);
         return state;
     
+    }
+    //creates a new transition & adds it to turingmachine (caller)
+    //label should be string format
+    //called by userInput.createTransition()
+    createNewTransition(fromState, toState, label){
+        this.delta.set([fromState, label], toState)
     }
 
 // --- Helper Functions ---
@@ -284,15 +195,6 @@ function simulationLogMessage(message){
 }
 
 
-
-function busyWait(milliseconds) {
-    const endTime = Date.now() + milliseconds; // Calculate the end time in milliseconds
-
-    while (Date.now() < endTime) {
-        // Busy loop until the desired time has passed
-    }
-  }
-  
 
 
 

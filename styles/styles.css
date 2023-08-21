@@ -62,6 +62,20 @@ div#inputString{
     align-items: center;
 }
 
+/* ----- Simulation Speed Slider */
+.slider{
+    display: flex;
+    -webkit-appearance: none;
+    cursor: pointer;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+    height: 22px;
+    border-radius: 100px; 
+    background: #ccc;
+}
+
+
 /* ----- log message fields ----- */
 .logMessages{
     max-height: 300px;
@@ -75,6 +89,10 @@ div#inputString{
 }
 
 /* ----- State Creation Box ----- */
+#stateInput{
+    padding-top: 35px;
+    height: 245px;
+}
 /* State Name Box: inherited from textFieldDiv */
 /* --- State ID box (also for Transition tab) --- */
 .stateIdDiv {
