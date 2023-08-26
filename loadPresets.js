@@ -64,6 +64,42 @@ function loadPreset2(){
     cytoTransitionHelper(5, 5, 5, 5);
 }
 
+function loadPreset3(){
+    //reset
+    empty();
+    //Preset 2: Accept whenever contains with "0010" anywhere
+    //Starting State
+    createState("", 0, true, false, false);
+    //intermediate states
+    createState("", 1, false, false, false);
+    createState("", 2, false, false, false);
+    createState("", 3, false, false, false);
+    //accepting state
+    createState("", 4, false, true, false);
+    //Transitions
+    //From state 0
+    createTransition(0, 1, "0")
+    createTransition(0, 0, "1")
+    //from state 1
+    createTransition(1, 2, "0")
+    createTransition(1, 0, "1")
+    //from state 2
+    createTransition(2, 2, "0")
+    createTransition(2, 3, "1")
+    //from state 3
+    createTransition(3, 4, "0")
+    createTransition(3, 0, "1")
+    //from state 4
+    createTransition(4, 4, "0")
+    createTransition(4, 4, "1")
+    //cytoscape creation
+    cytoTransitionHelper(0, 1, 0, 0);
+    cytoTransitionHelper(1, 2, 1, 0);
+    cytoTransitionHelper(2, 2, 2, 3);
+    cytoTransitionHelper(3, 4, 3, 0);
+    cytoTransitionHelper(4, 4, 4, 4);
+}
+
 function empty(){
     //reset
     startTuringMachine();
@@ -89,5 +125,10 @@ presetSelect.addEventListener("change", function() {
             loadPreset2();
             console.log("PresetTwo clicked");
         } 
+        else if (presetSelect.value === "PresetThree") {
+            loadPreset3();
+            console.log("PresetThree clicked");
+        } 
         // Add more conditions for other options as needed
     });
+
