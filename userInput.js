@@ -1,5 +1,5 @@
 import {TuringMachine} from './TuringMachine.js'
-import {cytoCreateNode, cytoCreateEdge, cytoRemoveLastNode} from './cytoscape.js';
+import {cytoCreateNode, cytoCreateEdge, cytoRemoveNode} from './cytoscape.js';
 //export
 export{createState, createTransition, cytoTransitionHelper, startTuringMachine}
 
@@ -13,6 +13,7 @@ let maxStateId = 50;
 //set first From State to 0
 let TransitionSetter = 0;
 //cytoscape TransitionID (!assumes maxID of states = 99! edge ids from 100 onwards)
+let combined = false;
 let edgeId = 100;
 
 //function that is run when page is loaded (=> also run by reset())
@@ -131,6 +132,10 @@ function createState(stateName, stateId, isStartingState, isAcceptingState, isRe
         document.getElementById("createTransitionButton").disabled = false;
         document.getElementById("runSimulationButton").disabled = true;
     }
+    //unlock delete last state button
+    if(stateIdSetter>0){
+        document.getElementById("deleteStateButton").disabled=false;
+    }
 
     //logging
     console.log("State created: ", stateName, " ", stateId);
@@ -179,7 +184,6 @@ function createTransition(fromStateId, toStateId, label){
     //add transitions to turingMachine set delta
     turingMachine.createNewTransition(fromState, toState, label);
     
-
     //formhelper
     transitionFormHelper();
 
@@ -198,10 +202,12 @@ function createTransition(fromStateId, toStateId, label){
 function cytoTransitionHelper(fromStateId0, toStateId0, fromStateId1, toStateId1){
     if(fromStateId0 == fromStateId0 && toStateId0 == toStateId1){
         //combined edge if edge 0 == edge 1
+        combined = true;
         cytoCreateEdge(edgeId, fromStateId0, toStateId0, "0,1")
     }
     else{
         //seperate edges (even Id for 0 edges, odd Id for 1 edges)
+        combined = false;
         cytoCreateEdge(edgeId, fromStateId0, toStateId0, 0);
         cytoCreateEdge(edgeId+1, fromStateId1, toStateId1, 1);
     }
@@ -221,27 +227,71 @@ function transitionFormHelper(){
         document.getElementById("createTransitionButton").disabled = true;
         document.getElementById("runSimulationButton").disabled = false;
     }
+    //delete Transition button
+    if(TransitionSetter > 0){
+        document.getElementById("deleteTransitionButton").disabled = false;
+    }
 }
 
 //Delete last created State
 function deleteLastState(){
-    // TO DO
-    /*
     //delete in TM object
     let stateToDelete = turingMachine.getStateById(stateIdSetter-1);
+    //alert if any Transitions to/from this state
+    for(const [key, value] of turingMachine.delta.entries()){
+        if(key[0] === stateToDelete ||
+            value === stateToDelete){
+            alert(`please remove any from/to State ID ${stateIdSetter-1} transition first`)
+            return;
+        }
+    }
+    //delete in TM object
     turingMachine.states.delete(stateToDelete);
-    //delete any Transitions from/to this state
 
+    //form helper
+    stateIdSetter--;
+    document.getElementById("stateId").value = stateIdSetter;
+    document.getElementById("toStateId0").value = 0;
+    document.getElementById("toStateId1").value = 0;
+    document.getElementById("toStateId0").setAttribute('max', stateIdSetter-1)
+    document.getElementById("toStateId1").setAttribute('max', stateIdSetter-1)
+    if(stateIdSetter===0){
+        document.getElementById("deleteStateButton").disabled = true;
+    }
     //delete node in cyto (also deletes transitions)
-    cytoRemoveLastNode();
-    */
+    cytoRemoveNode(stateIdSetter);
+    
 }
-//document.getElementById("deleteStateButton").addEventListener("click", deleteLastState);
+document.getElementById("deleteStateButton").addEventListener("click", deleteLastState);
+
 //delete last created transition
 function deleteLastTransition(){
-    //TO DO
+    //decrease edgeId
+    edgeId -= 2;
+    TransitionSetter--;
+    //Delete from TM object
+    const fromState = turingMachine.getStateById(TransitionSetter);
+    turingMachine.delta.delete(turingMachine.getKeyByContent(turingMachine.delta, [fromState, "0"]));
+    turingMachine.delta.delete(turingMachine.getKeyByContent(turingMachine.delta, [fromState, "1"]));
+
+    //Form adjustments
+    document.getElementById("fromStateId0").value = TransitionSetter;
+    document.getElementById("fromStateId1").value = TransitionSetter;
+    document.getElementsByName("transitionField").forEach(element => {
+        element.disabled = false;
+    });
+    document.getElementById("createTransitionButton").disabled = false;
+    document.getElementById("runSimulationButton").disabled = true;
+    if(TransitionSetter === 0){
+        document.getElementById("deleteTransitionButton").disabled = true;
+    }
+
+    //delete in cyto
+    cytoRemoveNode(edgeId);
+    cytoRemoveNode(edgeId+1);
+
 }
-//document.getElementById("deleteTransitionButton").addEventListener("click", deleteLastTransition);
+document.getElementById("deleteTransitionButton").addEventListener("click", deleteLastTransition);
 
 //runSimulation on inputString & alert user on simulation outcome
 function runSimulation(){

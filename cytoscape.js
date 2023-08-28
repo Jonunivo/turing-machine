@@ -1,5 +1,5 @@
 import cytoscape from './node_modules/cytoscape/dist/cytoscape.esm.min.js';
-export {cy, cytoCreateNode, cytoCreateEdge, cytoRemoveLastNode, animateNode, animateEdge, clearCanvas};
+export {cy, cytoCreateNode, cytoCreateEdge, cytoRemoveNode, animateNode, animateEdge, clearCanvas};
 
 
 //cytoscape object
@@ -95,8 +95,9 @@ function cytoCreateEdge(id, fromNode, toNode, label){
     );
 }
 
-function cytoRemoveLastNode(){
-    //TO DO
+function cytoRemoveNode(id){
+    let node = cy.getElementById(id);
+    cy.remove(node);
 }
 
 
@@ -135,6 +136,10 @@ function animateNode(nodeId, animationTime){
 }
 
 
+function cytoRemoveEdge(id){
+    let edge = cy.getElementById(id);
+    edge.remove();
+}
 
 function animateEdge(nodeId, token, animationTime){
     //edge animation

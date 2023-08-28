@@ -43,7 +43,7 @@ h1 {
 
 /* ----- user input boxes */
 div.userInput{
-    height: 280px;
+    height: 300px;
 }
 
 /* ----- Reset Button box ----- */
@@ -135,7 +135,7 @@ div#inputString{
 /* ----- State Creation Box ----- */
 #stateInput{
     padding-top: 35px;
-    height: 245px;
+    height: 265px;
 }
 /* State Name Box: inherited from textFieldDiv */
 /* --- State ID box (also for Transition tab) --- */
@@ -322,12 +322,17 @@ input[type="number"]:disabled{
     border: 2px solid darkgray
 }
 
+/* --- Run Simulation Button --- */
+#runSimulationButton{
+    margin-top: 35px;
+}
+
 /* ----- CytoScape ----- */
 #cytoscape {
     width: 80%;
     height: 100%;
     position: absolute;
-    top: 400px;
+    top: 410px;
     left: 235px;
     border: dotted 1px black;
 }
