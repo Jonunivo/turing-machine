@@ -1,2 +1,2 @@
 # turing-machine
-if you can read this line, committing through VSCode works as intended
+This is the first Prototype of my Turingmachine

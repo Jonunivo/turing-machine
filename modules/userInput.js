@@ -3,20 +3,31 @@ import {cytoCreateNode, cytoCreateEdge, cytoRemoveNode} from './cytoscape.js';
 //export
 export{createState, createTransition, cytoTransitionHelper, startTuringMachine}
 
-// -- global variables
-//TuringMachine
-let turingMachine;
-//Form Default Values helper
-//set first StateID to 0
-let stateIdSetter = 0;
-let maxStateId = 50;
-//set first From State to 0
-let TransitionSetter = 0;
-//cytoscape TransitionID (!assumes maxID of states = 99! edge ids from 100 onwards)
-let combined = false;
-let edgeId = 100;
+//this file handels user input
 
-//function that is run when page is loaded (=> also run by reset())
+
+// ---- Global Variables ----
+// Turing Machine instance
+let turingMachine;
+
+// Helper for Form Default Values
+let stateIdSetter = 0; // Set the first StateID to 0, used to handle unique ID assignment to states
+let maxStateId = 50;    // Maximum allowed States
+let TransitionSetter = 0; // Set the first From State to 0, used to handle TransitionFromId / Transition Creation
+
+// Cytoscape TransitionID
+// Note: Assumes maxID of states is 99, edge ids start from 100 onwards
+let edgeId = 100;     // Starting ID for edges
+
+
+/**
+ * Initializes the Turing Machine and sets up the initial state when the page is loaded or reset.
+ *
+ * This function is run when the page is loaded, as well as by the `reset()` function.
+ * It resets global variables to their starting values and initializes the Turing Machine.
+ * It also handles form reset, enabling/disabling form elements
+ * @returns {void}
+ */
 function startTuringMachine(){
     //(re-)set globals to starting value
     stateIdSetter = 0;
@@ -39,20 +50,22 @@ function startTuringMachine(){
     });
     document.getElementById("createTransitionButton").disabled= true;
 
-    //turing Machine initialized
-    
-
-
     //create TM object
     createTuringMachine();
 }
 window.addEventListener("load", startTuringMachine);
 
 
-//read State Inputs from User
+/**
+ * Creates a new state based on user inputs and adds it to the Turing Machine.
+ *
+ * This function retrieves user inputs from input fields and sliders to define the attributes of the new state.
+ * It then calls the `createState()` function to create the state and update the Turing Machine object.
+ *
+ * @returns {void}
+ */
 function userCreateState() {
-    // Get the user input from the input fields and on/off sliders
-    //var stateName = document.getElementById("stateName").value;
+
     var stateId = document.getElementById("stateId").value;
     var isStartingState = document.getElementById("stateStarting").checked === true;
     var isAcceptingState = document.getElementById("stateAccepting").checked === true;
@@ -62,7 +75,23 @@ function userCreateState() {
     
 }
 document.getElementById("createStateButton").addEventListener("click", userCreateState);
-//actually create state
+/**
+ * Creates a new state and updates the Turing Machine with it.
+ *
+ * This function creates a new state with the provided attributes and adds it to the Turing Machine.
+ * It handles various scenarios, such as setting starting, accepting, and rejecting states
+ * alerts user if trying to create Accepting & Rejecting state -> return
+ * alerts user if max number of nodes reached -> return
+ * Creates Cytoscape node
+ * Additionally, it handles form validation and logging.
+ *
+ * @param {string} stateName - The name of the new state.
+ * @param {number} stateId - The ID of the new state.
+ * @param {boolean} isStartingState - Indicates whether the state is a starting state (true) or not (false).
+ * @param {boolean} isAcceptingState - Indicates whether the state is an accepting state (true) or not (false).
+ * @param {boolean} isRejectingState - Indicates whether the state is a rejecting state (true) or not (false).
+ * @returns {void}
+ */
 function createState(stateName, stateId, isStartingState, isAcceptingState, isRejectingState){
     //cyto default values
     var cytocolor = 'lightgrey';
@@ -159,8 +188,15 @@ function createState(stateName, stateId, isStartingState, isAcceptingState, isRe
 
 
 
-//read Transition inputs from user
-//LIMITATION: transition labels are limited to 0 & 1
+/**
+ * Reads user inputs to create transitions and adds them to the Turing Machine.
+ *
+ * This function retrieves user inputs from input fields and creates transitions based on those inputs.
+ * It calls the `createTransition()` function to add the transitions to the Turing Machine.
+ * It also handles Cytoscape edge creation and form input helper functions.
+ *
+ * @returns {void}
+ */
 function userCreateTransition(){
     //fetch user input
     var fromStateId0 = document.getElementById("fromStateId0").value;
@@ -176,7 +212,18 @@ function userCreateTransition(){
 
 }
 document.getElementById("createTransitionButton").addEventListener("click", userCreateTransition);
-//actually create Transition
+/**
+ * Creates a new transition and updates the Turing Machine with it.
+ *
+ * This function creates a new transition between two states and adds it to the Turing Machine.
+ * It gets the corresponding states from their IDs, updates the delta function, and handles form input.
+ * It also logs the transition creation.
+ *
+ * @param {number} fromStateId - The ID of the source state for the transition.
+ * @param {number} toStateId - The ID of the target state for the transition.
+ * @param {string} label - The label of the transition (either "0" or "1").
+ * @returns {void}
+ */
 function createTransition(fromStateId, toStateId, label){
     //get corresponding states from IDs
     var fromState = turingMachine.getStateById(fromStateId);
@@ -198,22 +245,38 @@ function createTransition(fromStateId, toStateId, label){
     transitionLogMessage(`--------`)
     */
 }
-//create cytoscape edges
+/**
+ * Helper function to create Cytoscape edges based on transition inputs.
+ *
+ * This function creates Cytoscape edges based on the provided transition inputs.
+ * It handles scenarios where edges can be combined or separate based on the inputs.
+ *
+ * @param {number} fromStateId0 - The ID of the source state for the first transition.
+ * @param {number} toStateId0 - The ID of the target state for the first transition.
+ * @param {number} fromStateId1 - The ID of the source state for the second transition.
+ * @param {number} toStateId1 - The ID of the target state for the second transition.
+ * @returns {void}
+ */
 function cytoTransitionHelper(fromStateId0, toStateId0, fromStateId1, toStateId1){
     if(fromStateId0 == fromStateId0 && toStateId0 == toStateId1){
         //combined edge if edge 0 == edge 1
-        combined = true;
         cytoCreateEdge(edgeId, fromStateId0, toStateId0, "0,1")
     }
     else{
         //seperate edges (even Id for 0 edges, odd Id for 1 edges)
-        combined = false;
         cytoCreateEdge(edgeId, fromStateId0, toStateId0, 0);
         cytoCreateEdge(edgeId+1, fromStateId1, toStateId1, 1);
     }
     edgeId += 2;
 }
-//form input helper
+/**
+ * Helper function to handle form inputs related to transitions.
+ *
+ * This function assists in updating form input fields related to transitions.
+ * It iterates through form fields, sets values, disables fields, and controls button states.
+ *
+ * @returns {void}
+ */
 function transitionFormHelper(){
     //set from state iterating from 0 to stateIdSetter
     TransitionSetter+=0.5;
@@ -233,7 +296,15 @@ function transitionFormHelper(){
     }
 }
 
-//Delete last created State
+/**
+ * Deletes the last state that was created.
+ *
+ * This function removes the last created state from the Turing Machine object and updates the form inputs accordingly.
+ * It checks for existing transitions to or from the state being deleted and alerts&retruns if such transitions exist.
+ * Removes the corresponding cytoscape node.
+ *
+ * @returns {void}
+ */
 function deleteLastState(){
     //delete in TM object
     let stateToDelete = turingMachine.getStateById(stateIdSetter-1);
@@ -258,13 +329,20 @@ function deleteLastState(){
     if(stateIdSetter===0){
         document.getElementById("deleteStateButton").disabled = true;
     }
-    //delete node in cyto (also deletes transitions)
+    //delete node in cyto
     cytoRemoveNode(stateIdSetter);
-    
 }
 document.getElementById("deleteStateButton").addEventListener("click", deleteLastState);
 
-//delete last created transition
+/**
+ * Deletes the last created transition.
+ *
+ * This function removes the last created transition from the Turing Machine object's delta function.
+ * It updates the form inputs and controls related to transitions.
+ * It also manages the visual representation in Cytoscape by removing the corresponding edges.
+ *
+ * @returns {void}
+ */
 function deleteLastTransition(){
     //decrease edgeId
     edgeId -= 2;
@@ -289,11 +367,20 @@ function deleteLastTransition(){
     //delete in cyto
     cytoRemoveNode(edgeId);
     cytoRemoveNode(edgeId+1);
-
 }
 document.getElementById("deleteTransitionButton").addEventListener("click", deleteLastTransition);
 
-//runSimulation on inputString & alert user on simulation outcome
+/**
+ * Runs the Turing Machine simulation on the input string and provides the simulation outcome to the user.
+ *
+ * This function initiates the simulation process by clearing the user simulation log and validating the input string.
+ * It ensures that the input string consists only of binary (0 and 1) characters.
+ * It also checks if there's a starting state defined in the Turing Machine, if not: alerts user & returns.
+ * During the simulation, the "Run Simulation" button is disabled and its text is changed to indicate the running state.
+ * After the simulation, the simulation result is displayed to the user through an alert. (disabled for now)
+ *
+ * @returns {void}
+ */
 function runSimulation(){
     //clear userSimulationLog
     document.getElementById("simulationLogMessages").innerHTML="";
@@ -327,14 +414,23 @@ function runSimulation(){
     else{
         //alert("input rejected!")
     }
-
-    //re-enable Run Simulation button
-    //done in turingMachine.runSimulation in TuringMachine.js
-
 }
 document.getElementById("runSimulationButton").addEventListener("click", runSimulation);
 
-//create default turing machine (no states, alphabet = {0,1})
+/**
+ * Creates a default Turing Machine with no states and an alphabet {0, 1}.
+ *
+ * This function initializes a default Turing Machine object with the following properties:
+ * - An empty set of states
+ * - An alphabet (sigma) containing the symbols "0" and "1"
+ * - A working alphabet (gamma) identical to the alphabet sigma
+ * - An empty map of transitions
+ * - No defined starting, accepting, or rejecting states initially
+ *
+ * The created Turing Machine object is assigned to the global variable `turingMachine`.
+ *
+ * @returns {void}
+ */
 function createTuringMachine(){
     //properties
     let states = new Set();
@@ -350,9 +446,15 @@ function createTuringMachine(){
     //logging
     console.log("successfully created TM:", turingMachine);
 }
-//document.getElementById("createTMButton").addEventListener("click", createTuringMachine);
 
-//reset button that destroys States & Transitions (page reload)
+/**
+ * Resets the Turing Machine simulation by reloading the page.
+ *
+ * This function reloads the entire page, effectively resetting the Turing Machine simulation.
+ * All created states and transitions will be destroyed, and the simulation will return to its initial state.
+ *
+ * @returns {void}
+ */
 function reset(){
     //reload page
     location.reload();
@@ -361,7 +463,17 @@ document.getElementById("resetButton").addEventListener("click", reset);
 
 
 
-//helper functions that add messages to the user screen (creates p element)
+/**
+ * //not used anymore
+ * 
+ * Adds a log message to the user screen in the simulation log area.
+ *
+ * This function appends a new log message to the simulation log area on the user screen.
+ * It creates a new paragraph element and populates it with the provided message.
+ *
+ * @param {string} message - The message to be displayed in the simulation log.
+ * @returns {void}
+ */
 function simulationLogMessage(message){
     //get id from HTML
     const logMessagesDiv = document.getElementById("simulationLogMessages");
@@ -374,7 +486,17 @@ function simulationLogMessage(message){
 }
 
 
-//not used anymore (since cytoscape)
+/**
+ * //not used anymore
+ * 
+ * Adds a log message to the user screen in the state log area.
+ *
+ * This function appends a new log message to the simulation log area on the user screen.
+ * It creates a new paragraph element and populates it with the provided message.
+ *
+ * @param {string} message - The message to be displayed in the simulation log.
+ * @returns {void}
+ */
 function stateLogMessage(message){
     //get id from HTML
     const logMessagesDiv = document.getElementById("stateLogMessages");
@@ -385,7 +507,18 @@ function stateLogMessage(message){
     logMessagesElement.textContent = message;
     logMessagesDiv.appendChild(logMessagesElement);
 }
-//not used anymore (since cytoscape)
+
+/**
+ * //not used anymore
+ * 
+ * Adds a log message to the user screen in the transition log area.
+ *
+ * This function appends a new log message to the simulation log area on the user screen.
+ * It creates a new paragraph element and populates it with the provided message.
+ *
+ * @param {string} message - The message to be displayed in the simulation log.
+ * @returns {void}
+ */
 function transitionLogMessage(message){
     //get id from HTML
     const logMessagesDiv = document.getElementById("transitionLogMessages");

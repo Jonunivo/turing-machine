@@ -1,10 +1,11 @@
 import {createState, createTransition, cytoTransitionHelper, startTuringMachine} from './userInput.js';
 import {clearCanvas} from './cytoscape.js'
 
+
+//creates Preset that detects if "1" in string
 function loadPreset1(){
     //reset
     empty();
-    //Preset 1: Accept whenever a 1 seen in string
     //Starting State
     createState("", 0, true, false, false);
     //Accepting state
@@ -22,10 +23,10 @@ function loadPreset1(){
 
 }
 
+//creates Preset that detects string starts with "0010"
 function loadPreset2(){
     //reset
     empty();
-    //Preset 2: Accept whenever starts with "0010"
     //Starting State
     createState("", 0, true, false, false);
     //intermediate states
@@ -64,10 +65,10 @@ function loadPreset2(){
     cytoTransitionHelper(5, 5, 5, 5);
 }
 
+//creates Preset that detects string containing "0010"
 function loadPreset3(){
     //reset
     empty();
-    //Preset 2: Accept whenever contains with "0010" anywhere
     //Starting State
     createState("", 0, true, false, false);
     //intermediate states
@@ -100,6 +101,7 @@ function loadPreset3(){
     cytoTransitionHelper(4, 4, 4, 4);
 }
 
+//Clears Canvas & Deletes TuringMachine (Creates new one)
 function empty(){
     //reset
     startTuringMachine();
@@ -107,8 +109,7 @@ function empty(){
 }
 
 
-//event listeners 
-var options = document.querySelectorAll("#presetSelect option");
+//handle Dropdown menu & activate correct function when value changes
 var presetSelect = document.getElementById("presetSelect");
     
 presetSelect.addEventListener("change", function() {
