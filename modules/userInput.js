@@ -207,6 +207,13 @@ function userCreateTransition(){
     var toStateId0 = document.getElementById("toStateId0").value;
     var fromStateId1 = document.getElementById("fromStateId1").value;
     var toStateId1 = document.getElementById("toStateId1").value;
+    //detect invalid input
+    if(toStateId0 > stateIdSetter-1 || toStateId0 < 0 ||
+        toStateId1 > stateIdSetter-1 || toStateId1 < 0){
+        alert("invalid input (looking at you Cedi)");
+        return
+    }
+
 
     //create transition in TM
     createTransition(fromStateId0, toStateId0, "0");
