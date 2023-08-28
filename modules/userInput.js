@@ -49,6 +49,10 @@ function startTuringMachine(){
         element.disabled = true;
     });
     document.getElementById("createTransitionButton").disabled= true;
+    document.getElementById("deleteTransitionButton").disabled= true;
+    //disable Delete Last State
+    document.getElementById("deleteStateButton").disabled= true;
+
 
     //create TM object
     createTuringMachine();
@@ -319,7 +323,7 @@ function deleteLastState(){
     //delete in TM object
     turingMachine.states.delete(stateToDelete);
 
-    //form helper
+    ////form helper
     stateIdSetter--;
     document.getElementById("stateId").value = stateIdSetter;
     document.getElementById("toStateId0").value = 0;
@@ -328,7 +332,19 @@ function deleteLastState(){
     document.getElementById("toStateId1").setAttribute('max', stateIdSetter-1)
     if(stateIdSetter===0){
         document.getElementById("deleteStateButton").disabled = true;
+        document.getElementById("createTransitionButton").disabled = true;
     }
+    //reenable starting/accepting/rejecting if deleted
+    if(stateToDelete.isStarting){
+        document.getElementById("stateStarting").disabled = false;
+    }
+    if(stateToDelete.isAccepting){
+        document.getElementById("stateAccepting").disabled = false;
+    }
+    if(stateToDelete.isRejecting){
+        document.getElementById("stateRejecting").disabled = false;
+    }
+    ////
     //delete node in cyto
     cytoRemoveNode(stateIdSetter);
 }

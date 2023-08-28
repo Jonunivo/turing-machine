@@ -12,7 +12,7 @@ export class State{
         this.id =id;
         this.isStarting = isStarting;
         this.isAccepting = isAccepting;
-        this.isRejecting = isRejecting
+        this.isRejecting = isRejecting;
     }
 }
 

@@ -327,6 +327,16 @@ input[type="number"]:disabled{
     margin-top: 35px;
 }
 
+/* Delete Buttons */
+.delete{
+    background-color: rgb(219, 101, 101);
+    border: 2px solid rgb(196, 52, 52);
+}
+.delete:enabled:hover{
+    background-color: rgb(196, 52, 52);
+    border: 2px solid rgb(196, 52, 52);
+}
+
 /* ----- CytoScape ----- */
 #cytoscape {
     width: 80%;
