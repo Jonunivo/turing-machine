@@ -598,9 +598,22 @@ document.getElementById('fileInput').addEventListener('change', (event) => {
                     }
                     try {
                         //read File
-                        const fromStateId = currentLine[0];
-                        const toStateId = currentLine[2];
-                        const label = currentLine[4].toString();
+                        let pointer = 0;
+                        let fromStateId = Number(currentLine[pointer]);
+                        if(currentLine[pointer+1] !== ","){
+                            fromStateId *= 10;
+                            fromStateId += Number(currentLine[pointer+1]);
+                            pointer++;
+                        }
+                        pointer+=2;
+                        let toStateId = Number(currentLine[pointer]);
+                        if(currentLine[pointer+1] !== ","){
+                            toStateId *= 10;
+                            toStateId += Number(currentLine[pointer+1]);
+                            pointer++;
+                        }
+                        pointer+=2;
+                        const label = currentLine[pointer].toString();
                         console.log("read Input: ", fromStateId, toStateId, label);
                         createTransition(fromStateId, toStateId, label);
 
