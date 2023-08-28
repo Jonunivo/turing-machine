@@ -2,6 +2,10 @@ import {createState, createTransition, cytoTransitionHelper, startTuringMachine}
 import {clearCanvas} from './cytoscape.js'
 
 
+
+
+
+
 //creates Preset that detects if "1" in string
 function loadPreset1(){
     //reset
@@ -64,6 +68,7 @@ function loadPreset2(){
     cytoTransitionHelper(4, 4, 4, 4);
     cytoTransitionHelper(5, 5, 5, 5);
 }
+
 
 //creates Preset that detects string containing "0010"
 function loadPreset3(){

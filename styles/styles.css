@@ -78,6 +78,20 @@ option {
     border: 1px solid #ccc;
 
 }
+#choosePreset{
+    border-top: solid 1px grey;
+    border-bottom: solid 1px grey;
+
+}
+
+/* ---- file input ---- */
+#fileInput{
+    display: flexbox;
+    margin-bottom: 5px;
+
+    justify-items: center;
+    align-items: center;
+}
 
 /* ----- input string box ----- */
 div#inputString{
@@ -310,22 +324,22 @@ input[type="number"]:disabled{
     background-color: #fff8f6;
 }
 
-/* --- Reset Button --- */
-.button#resetButton{
+/* --- Reset&Save Button --- */
+.button#resetButton,
+.button#saveButton{
     color: rgba(0, 0, 0, 0.815);
     background-color: #ccc;
     border: 2px solid darkgray
 }
-.button#resetButton:hover{
+.button#resetButton:hover,
+.button#saveButton:hover{
     color: rgba(0, 0, 0, 0.815);
     background-color: darkgray;
     border: 2px solid darkgray
 }
 
 /* --- Run Simulation Button --- */
-#runSimulationButton{
-    margin-top: 35px;
-}
+
 
 /* Delete Buttons */
 .delete{

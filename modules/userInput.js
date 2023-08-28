@@ -1,5 +1,5 @@
 import {TuringMachine} from './TuringMachine.js'
-import {cytoCreateNode, cytoCreateEdge, cytoRemoveNode} from './cytoscape.js';
+import {cytoCreateNode, cytoCreateEdge, cytoRemoveNode, clearCanvas} from './cytoscape.js';
 //export
 export{createState, createTransition, cytoTransitionHelper, startTuringMachine}
 
@@ -485,6 +485,163 @@ function reset(){
 document.getElementById("resetButton").addEventListener("click", reset);
 
 
+/**
+ * Saves the current state of the Turing Machine to a downloadable JSON file.
+ */
+function saveTuringMachine(){
+    // Convert state data to JSON
+    const serializedState = []
+
+    //create states
+    for(const state of turingMachine.states){
+        serializedState.push(JSON.stringify(state));
+    }
+    //line break
+    serializedState.push('\n');
+    //create transitions
+    for(const [key, value] of turingMachine.delta){
+        //[fromStateId, toStateId, label]
+        serializedState.push([key[0].id, value.id, key[1]]);
+    }
+    // Convert the serialized state data to a single string
+    const serializedData = serializedState.join('\n');
+    // Prompt the user for a filename
+    const filename = window.prompt('Enter a filename for the downloaded file:', 'MyTuringMachine.json');
+
+    if (!filename) {
+        // User canceled the prompt
+        return;
+    }
+    
+    // Create a Blob containing the serialized data
+    const blob = new Blob([serializedData], { type: 'application/json' });
+
+    // Create a downloadable link
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(blob);
+
+    // Set suggested filename for the downloaded file
+    downloadLink.download = filename;
+
+    // Append the link to the DOM (optional)
+    document.body.appendChild(downloadLink);
+
+    // Programmatically trigger the download
+    downloadLink.click();
+
+    // Clean up the object URL
+    URL.revokeObjectURL(downloadLink.href);
+}
+document.getElementById("saveButton").addEventListener("click", saveTuringMachine);
+
+/**
+ * Handles the loading and processing of a file's content using the file input element.
+ * When a file is selected and its content is read, this function processes the data by
+ * parsing JSON information to create states and transitions. 
+ * Also creates cyto nodes & transitions
+ *
+ * @param {Event} event - The event object representing the change in the file input element.
+ */
+document.getElementById('fileInput').addEventListener('change', (event) => {
+    const fileList = event.target.files;
+  
+    if (fileList.length > 0) {
+        const selectedFile = fileList[0];
+        const reader = new FileReader();
+    
+        //load File    
+        reader.onload = (event) => {
+            const fileContent = event.target.result;
+            
+            // Split the content into lines
+            const lines = fileContent.split('\n');
+    
+            
+            if (lines.length > 0) {
+                //reset canvas
+                empty();
+                // Load States
+                let i = 0;
+                while(true){
+                    const currentLine = lines[i]
+                    console.log('current line:', currentLine);
+                    // If the file content is JSON data, you can parse it
+                    if(currentLine == "" || currentLine == undefined){
+                        break;
+                    }
+                    try {
+                        const parsedData = JSON.parse(currentLine);
+                        console.log('Parsed data:', parsedData);
+                        const id = parsedData.id;
+                        const isStarting = parsedData.isStarting;
+                        const isAccepting = parsedData.isAccepting;
+                        const isRejecting = parsedData.isRejecting;
+                        createState("", id, isStarting, isAccepting, isRejecting);
+                    } catch (error) {
+                        console.log('Error parsing JSON:', error.message);
+                        alert("Failed to load .json file, try again");
+                        reset();
+                        return;
+                    }
+                    i++;
+                }
+                i+=2;
+                //load Transitions
+                let first = true;
+                let fromStateId0 = undefined;
+                let toStateId0 = undefined;
+                while(true){
+                    const currentLine = lines[i]
+                    console.log('current line:', currentLine);
+                    if(currentLine == "" || currentLine == undefined){
+                        break;
+                    }
+                    try {
+                        //read File
+                        const fromStateId = currentLine[0];
+                        const toStateId = currentLine[2];
+                        const label = currentLine[4].toString();
+                        console.log("read Input: ", fromStateId, toStateId, label);
+                        createTransition(fromStateId, toStateId, label);
+
+                        //cyto
+                        if(first){
+                            fromStateId0 = fromStateId;
+                            toStateId0 = toStateId;
+                            first = false;
+                        }
+                        else{
+                            console.log("here: ", fromStateId0, toStateId0, fromStateId, toStateId)
+                            cytoTransitionHelper(fromStateId0, toStateId0, fromStateId, toStateId);
+                            first = true;
+                        }
+
+                    } catch (error) {
+                        console.log('Error parsing JSON:', error.message);
+                        alert("Failed to load .json file, try again");
+                        reset();
+                        return;
+                    }
+                    i++;
+                }
+            
+            
+            } else {
+            console.log('File is empty.');
+            }
+        };
+  
+      reader.readAsText(selectedFile);
+    } else {
+      console.log('No file selected.');
+    }
+  });
+
+//Clears Canvas & Deletes TuringMachine (Creates new one)
+function empty(){
+    startTuringMachine();
+    clearCanvas();
+}
 
 /**
  * //not used anymore
