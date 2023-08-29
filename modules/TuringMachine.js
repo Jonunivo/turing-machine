@@ -130,7 +130,6 @@ export class TuringMachine{
         return returnState;
     }
     
-
     /**
      * Handles the result after the simulation reaches its final state.
      * 
@@ -173,6 +172,7 @@ export class TuringMachine{
         return result
     }
 
+    
     /**
      * Creates a new state and adds it to the Turing Machine.
      *

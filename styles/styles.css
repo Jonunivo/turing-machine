@@ -89,8 +89,6 @@ option {
     display: flexbox;
     margin-bottom: 5px;
 
-    justify-items: center;
-    align-items: center;
 }
 
 /* ----- input string box ----- */

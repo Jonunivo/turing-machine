@@ -3,8 +3,9 @@ import {cytoCreateNode, cytoCreateEdge, cytoRemoveNode, clearCanvas} from './cyt
 //export
 export{createState, createTransition, cytoTransitionHelper, startTuringMachine}
 
-//this file handels user input
 
+
+//this file handels user input
 
 // ---- Global Variables ----
 // Turing Machine instance
@@ -307,6 +308,8 @@ function transitionFormHelper(){
     }
 }
 
+
+
 /**
  * Deletes the last state that was created.
  *
@@ -393,6 +396,9 @@ function deleteLastTransition(){
 }
 document.getElementById("deleteTransitionButton").addEventListener("click", deleteLastTransition);
 
+
+
+
 /**
  * Runs the Turing Machine simulation on the input string and provides the simulation outcome to the user.
  *
@@ -440,6 +446,9 @@ function runSimulation(){
 }
 document.getElementById("runSimulationButton").addEventListener("click", runSimulation);
 
+
+
+
 /**
  * Creates a default Turing Machine with no states and an alphabet {0, 1}.
  *
@@ -483,6 +492,7 @@ function reset(){
     location.reload();
 }
 document.getElementById("resetButton").addEventListener("click", reset);
+
 
 
 /**
@@ -655,6 +665,10 @@ function empty(){
     startTuringMachine();
     clearCanvas();
 }
+
+
+
+
 
 /**
  * //not used anymore
