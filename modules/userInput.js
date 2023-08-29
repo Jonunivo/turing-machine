@@ -381,9 +381,8 @@ function deleteLastTransition(){
     //Form adjustments
     document.getElementById("fromStateId0").value = TransitionSetter;
     document.getElementById("fromStateId1").value = TransitionSetter;
-    document.getElementsByName("transitionField").forEach(element => {
-        element.disabled = false;
-    });
+    document.getElementById("toStateId0").disabled = false;
+    document.getElementById("toStateId1").disabled = false;
     document.getElementById("createTransitionButton").disabled = false;
     document.getElementById("runSimulationButton").disabled = true;
     if(TransitionSetter === 0){
